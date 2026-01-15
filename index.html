@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Testes - SFAut</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    
+    <!-- Date-fns -->
+    <script src="https://cdn.jsdelivr.net/npm/date-fns@2.30.0/index.min.js"></script>
+    
+    <style>
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-tertiary: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --accent: #3b82f6;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+        }
+        
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        
+        .card {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid var(--bg-tertiary);
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+        
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            line-height: 1;
+        }
+        
+        .metric-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .status-passed {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+        }
+        
+        .status-failed {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--danger);
+        }
+        
+        .status-skipped {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin-top: 1rem;
+        }
+        
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 400px;
+        }
+        
+        .spinner {
+            border: 4px solid var(--bg-tertiary);
+            border-top: 4px solid var(--accent);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .table-container {
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid var(--bg-tertiary);
+        }
+        
+        th {
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+        }
+        
+        tr:hover {
+            background: var(--bg-tertiary);
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-blue-600 to-purple-600 p-6 shadow-lg">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-3xl font-bold text-white mb-2">📊 Dashboard de Testes</h1>
+                    <p class="text-blue-100">Sistema de Automação de Testes - SFAut</p>
+                </div>
+                <div class="text-right">
+                    <div class="text-sm text-blue-100" id="lastUpdate">Carregando...</div>
+                    <button onclick="loadData()" class="mt-2 px-4 py-2 bg-white text-blue-600 rounded-lg hover:bg-blue-50 transition-colors font-semibold">
+                        🔄 Atualizar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto p-6">
+        <!-- KPIs da Última Execução -->
+        <section class="mb-8">
+            <h2 class="text-2xl font-bold mb-4">📈 Última Execução</h2>
+            <div id="kpiContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="card">
+                    <div class="metric-value text-blue-400" id="kpiTotal">-</div>
+                    <div class="metric-label">Total de Testes</div>
+                </div>
+                <div class="card">
+                    <div class="metric-value text-green-400" id="kpiPassed">-</div>
+                    <div class="metric-label">Passou</div>
+                </div>
+                <div class="card">
+                    <div class="metric-value text-red-400" id="kpiFailed">-</div>
+                    <div class="metric-label">Falhou</div>
+                </div>
+                <div class="card">
+                    <div class="metric-value text-yellow-400" id="kpiDuration">-</div>
+                    <div class="metric-label">Duração</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Gráficos -->
+        <section class="mb-8">
+            <h2 class="text-2xl font-bold mb-4">📊 Análise de Tendências</h2>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Gráfico de Tendência -->
+                <div class="card">
+                    <h3 class="text-lg font-semibold mb-4">Tendência de Execuções</h3>
+                    <div class="chart-container">
+                        <canvas id="trendChart"></canvas>
+                    </div>
+                </div>
+                
+                <!-- Gráfico de Distribuição de Erros -->
+                <div class="card">
+                    <h3 class="text-lg font-semibold mb-4">Distribuição de Erros</h3>
+                    <div class="chart-container">
+                        <canvas id="errorChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Estatísticas Gerais -->
+        <section class="mb-8">
+            <h2 class="text-2xl font-bold mb-4">📋 Estatísticas Gerais</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="card">
+                    <div class="metric-value text-purple-400" id="summaryExecutions">-</div>
+                    <div class="metric-label">Total de Execuções</div>
+                </div>
+                <div class="card">
+                    <div class="metric-value text-green-400" id="summarySuccessRate">-</div>
+                    <div class="metric-label">Taxa de Sucesso</div>
+                </div>
+                <div class="card">
+                    <div class="metric-value text-blue-400" id="summaryAvgDuration">-</div>
+                    <div class="metric-label">Duração Média</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tabela de Cenários da Última Execução -->
+        <section class="mb-8">
+            <h2 class="text-2xl font-bold mb-4">📝 Cenários da Última Execução</h2>
+            <div class="card table-container">
+                <table id="scenariosTable">
+                    <thead>
+                        <tr>
+                            <th>Status</th>
+                            <th>Cenário</th>
+                            <th>Feature</th>
+                            <th>Duração</th>
+                            <th>Erro</th>
+                        </tr>
+                    </thead>
+                    <tbody id="scenariosTableBody">
+                        <tr>
+                            <td colspan="5" class="text-center py-8 text-gray-400">Carregando dados...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading hidden">
+        <div class="spinner"></div>
+    </div>
+
+    <script>
+        let trendChart = null;
+        let errorChart = null;
+        let historyData = null;
+
+        // Carregar dados ao iniciar
+        document.addEventListener('DOMContentLoaded', () => {
+            loadData();
+        });
+
+        async function loadData() {
+            try {
+                showLoading();
+                
+                // Carregar history.json
+                const response = await fetch('history.json');
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                historyData = await response.json();
+                
+                // Atualizar UI
+                updateKPIs();
+                updateSummary();
+                updateCharts();
+                updateScenariosTable();
+                updateLastUpdate();
+                
+                hideLoading();
+            } catch (error) {
+                console.error('Erro ao carregar dados:', error);
+                showError('Erro ao carregar dados. Verifique se o arquivo history.json existe.');
+                hideLoading();
+            }
+        }
+
+        function showLoading() {
+            document.getElementById('loadingOverlay').classList.remove('hidden');
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingOverlay').classList.add('hidden');
+        }
+
+        function showError(message) {
+            const container = document.getElementById('kpiContainer');
+            container.innerHTML = `
+                <div class="col-span-full card bg-red-900/20 border-red-500">
+                    <div class="text-red-400 font-semibold">❌ ${message}</div>
+                </div>
+            `;
+        }
+
+        function updateKPIs() {
+            if (!historyData || historyData.executions.length === 0) {
+                showError('Nenhuma execução encontrada');
+                return;
+            }
+
+            const lastExecution = historyData.executions[historyData.executions.length - 1];
+            
+            document.getElementById('kpiTotal').textContent = lastExecution.total;
+            document.getElementById('kpiPassed').textContent = lastExecution.passed;
+            document.getElementById('kpiFailed').textContent = lastExecution.failed;
+            document.getElementById('kpiDuration').textContent = formatDuration(lastExecution.duration);
+        }
+
+        function updateSummary() {
+            if (!historyData) return;
+
+            const summary = historyData.summary;
+            
+            document.getElementById('summaryExecutions').textContent = summary.totalExecutions;
+            document.getElementById('summarySuccessRate').textContent = summary.successRate.toFixed(2) + '%';
+            document.getElementById('summaryAvgDuration').textContent = formatDuration(summary.averageDuration);
+        }
+
+        function updateCharts() {
+            if (!historyData || historyData.executions.length === 0) return;
+
+            updateTrendChart();
+            updateErrorChart();
+        }
+
+        function updateTrendChart() {
+            const ctx = document.getElementById('trendChart').getContext('2d');
+            
+            const executions = historyData.executions.slice(-30); // Últimas 30 execuções
+            const labels = executions.map(e => new Date(e.timestamp).toLocaleDateString('pt-BR'));
+            const passedData = executions.map(e => e.passed);
+            const failedData = executions.map(e => e.failed);
+
+            if (trendChart) {
+                trendChart.destroy();
+            }
+
+            trendChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels,
+                    datasets: [
+                        {
+                            label: 'Passou',
+                            data: passedData,
+                            borderColor: '#10b981',
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        },
+                        {
+                            label: 'Falhou',
+                            data: failedData,
+                            borderColor: '#ef4444',
+                            backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: { color: '#cbd5e1' }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: { color: '#cbd5e1' },
+                            grid: { color: '#334155' }
+                        },
+                        y: {
+                            ticks: { color: '#cbd5e1' },
+                            grid: { color: '#334155' }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateErrorChart() {
+            const ctx = document.getElementById('errorChart').getContext('2d');
+            
+            const lastExecution = historyData.executions[historyData.executions.length - 1];
+            const errorTypes = lastExecution.errors.byType || {};
+            
+            const labels = Object.keys(errorTypes);
+            const data = Object.values(errorTypes);
+            const colors = generateColors(labels.length);
+
+            if (errorChart) {
+                errorChart.destroy();
+            }
+
+            errorChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: labels.map(l => l.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())),
+                    datasets: [{
+                        data,
+                        backgroundColor: colors,
+                        borderColor: '#1e293b',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { color: '#cbd5e1' }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateScenariosTable() {
+            if (!historyData || historyData.executions.length === 0) return;
+
+            const lastExecution = historyData.executions[historyData.executions.length - 1];
+            const tbody = document.getElementById('scenariosTableBody');
+            
+            if (lastExecution.scenarios.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="text-center py-8 text-gray-400">Nenhum cenário encontrado</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = lastExecution.scenarios.map(scenario => `
+                <tr>
+                    <td>
+                        <span class="status-badge status-${scenario.status}">
+                            ${scenario.status === 'passed' ? '✅' : '❌'} ${scenario.status}
+                        </span>
+                    </td>
+                    <td class="font-medium">${escapeHtml(scenario.name)}</td>
+                    <td class="text-gray-400">${escapeHtml(scenario.feature)}</td>
+                    <td>${formatDuration(scenario.duration)}</td>
+                    <td class="text-sm text-gray-400">
+                        ${scenario.error ? `<span class="text-red-400" title="${escapeHtml(scenario.error)}">${escapeHtml(scenario.error.substring(0, 50))}...</span>` : '-'}
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function updateLastUpdate() {
+            if (!historyData) return;
+            
+            const lastUpdate = historyData.lastUpdated || historyData.executions[historyData.executions.length - 1]?.timestamp;
+            if (lastUpdate) {
+                const date = new Date(lastUpdate);
+                document.getElementById('lastUpdate').textContent = 
+                    `Última atualização: ${date.toLocaleString('pt-BR')}`;
+            }
+        }
+
+        function formatDuration(ms) {
+            if (!ms) return '0s';
+            const seconds = Math.floor(ms / 1000);
+            const minutes = Math.floor(seconds / 60);
+            const hours = Math.floor(minutes / 60);
+            
+            if (hours > 0) {
+                return `${hours}h ${minutes % 60}m`;
+            } else if (minutes > 0) {
+                return `${minutes}m ${seconds % 60}s`;
+            } else {
+                return `${seconds}s`;
+            }
+        }
+
+        function generateColors(count) {
+            const colors = [
+                '#ef4444', '#f59e0b', '#10b981', '#3b82f6', 
+                '#8b5cf6', '#ec4899', '#06b6d4', '#84cc16'
+            ];
+            return Array.from({ length: count }, (_, i) => colors[i % colors.length]);
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+    </script>
+</body>
+</html>
