@@ -1,0 +1,1035 @@
+{
+  "version": "2.0.0",
+  "generated": "2026-01-27T14:06:27.923Z",
+  "metadata": {
+    "lastUpdate": "2026-01-27T20:52:30.616Z",
+    "totalExecutions": 1,
+    "source": "jira-reports"
+  },
+  "executions": [
+    {
+      "executionId": "regression-2026-01-26T21-16-00-924Z",
+      "timestamp": "2026-01-26T21:16:00.924Z",
+      "date": "2026-01-26",
+      "total": 61,
+      "passed": 61,
+      "failed": 0,
+      "skipped": 0,
+      "undefined": 0,
+      "duration": 1596181.576458,
+      "durationManual": 36600000,
+      "environment": "qa",
+      "releaseVersion": "1",
+      "executionCount": 1,
+      "functionalities": [
+        "Accounts",
+        "Contacts",
+        "Leads",
+        "Opportunities"
+      ],
+      "errors": {
+        "infrastructure": 0,
+        "application": 0,
+        "byType": {}
+      },
+      "errorClassification": {
+        "testCode": 0,
+        "salesforceBug": 0,
+        "environment": 0,
+        "unknown": 0
+      },
+      "metrics": {
+        "successRate": 100,
+        "failureRate": 0,
+        "avgDuration": 26166.911089475412,
+        "totalDuration": 1596181.576458
+      },
+      "scenarios": [
+        {
+          "name": "Criar/Atualizar um Lead \"Playerum\" via API",
+          "feature": "api",
+          "status": "passed",
+          "duration": 4744.446095,
+          "error": null,
+          "errorType": null,
+          "errorClassification": null,
+          "steps": {
+            "total": 1,
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "undefined": 0
+          }
+        },
+        {
+          "name": "Criar/Atualizar um Lead que dispara conversão automática",
+          "feature": "api",
+          "status": "passed",
+          "duration": 24731.160194,
+          "error": null,
+          "errorType": null,
+          "errorClassification": null,
+          "steps": {
+            "total": 1,
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "undefined": 0
+          }
+        },
+        {
+          "name": "Criar/Atualizar um Lead RA ADS que dispara conversão automática e distribuição de Oportunidade",
+          "feature": "api",
+          "status": "passed",
+          "duration": 31792.978385,
+          "error": null,
+          "errorType": null,
+          "errorClassification": null,
+          "steps": {
+            "total": 1,
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "undefined": 0
+          }
+        },
+        {
+          "name": "Criar/Atualizar um Lead RA ADS com empresa cliente ativo - Conversão e distribuição",
+          "feature": "api",
+          "status": "passed",
+          "duration": 42886.292986,
+          "error": null,
+          "errorType": null,
+          "errorClassification": null,
+          "steps": {
+            "total": 1,
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "undefined": 0
+          }
+        },
+        {
+          "name": "Criar/Atualizar um Lead RA ADS com empresa sem contratos ativos - Não converte (mas não perde automaticamente)",
+          "feature": "api",
+          "status": "passed",
+          "duration": 26189.487694,
+          "error": null,
+          "errorType": null,
+          "errorClassification": null,
+          "steps": {
+            "total": 1,
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "undefined": 0
+          }
+        },
+        {
+          "name": "Criar/Atualizar um Lead RA Reviews com empresa cliente ativo - Conversão bem-sucedida",
+          "feature": "api",
+          "status": "passed",
+          "duration": 19120.596388,
+          "error": null,
+          "errorType": null,
+          "errorClassification": null,
+          "steps": {
+            "total": 1,
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "undefined": 0
+          }
+        },
+        {
+          "name": "Criar/Atualizar um Lead Brand Page Avançada com empresa cliente ativo - Conversão bem-sucedida",
+          "feature": "api",
+          "status": "passed",
+          "duration": 19264.690693,
+          "error": null,
+          "errorType": null,
+          "errorClassification": null,
+          "steps": {
+            "total": 1,
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "undefined": 0
+          }
+        },
+        {
+          "name": "Criar/Atualizar um Lead qualquer produto com empresa sem contratos ativos - Não converte (mas não perde automaticamente)",
+          "feature": "api",
+          "status": "passed",
+          "duration": 25013.959091,
+          "error": null,
+          "errorType": null,
+          "errorClassification": null,
+          "steps": {
+            "total": 1,
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "undefined": 0
+          }
+        },
+        {
+          "name": "Criar/Atualizar um Lead RA ADS com empresa cliente ativo e com checkout - Conversão e distribuição",
+          "feature": "api",
+          "status": "passed",
+          "duration": 32108.120495,
+          "error": null,
+          "errorType": null,
+          "errorClassification": null,
+          "steps": {
+            "total": 1,
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "undefined": 0
+          }
+        },
+        {
+          "name": "Criar/Atualizar um Lead RA ADS com empresa sem contratos ativos mas com checkout - Converte (comportamento atual do flow)",
+          "feature": "api",
+          "status": "passed",
+          "duration": 30881.402884,
+          "error": null,
+          "errorType": null,
+          "errorClassification": null,
+          "steps": {
+            "total": 1,
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "undefined": 0
+          }
+        },
+        {
+          "name": "Criar/Atualizar um Lead qualquer produto - Validação de vinculação empresa/contato",
+          "feature": "api",
+          "status": "passed",
+          "duration": 19062.118889,
+          "error": null,
+          "errorType": null,
+          "errorClassification": null,
+          "steps": {
+            "total": 1,
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "undefined": 0
+          }
+        },
+        {
+          "name": "Criar Leads para cada produto com empresa cliente ativo - Validação de conversão e distribuição",
+          "feature": "api",
+          "status": "passed",
+          "duration": 32780.001383,
+          "error": null,
+          "errorType": null,
+          "errorClassification": null,
+          "steps": {
+            "total": 1,
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "undefined": 0
+          }
+        },
+        {
+          "name": "Criar Leads para cada produto com empresa cliente ativo - Validação de conversão e distribuição",
+          "feature": "api",
+          "status": "passed",
+          "duration": 21409.680686,
+          "error": null,
+          "errorType": null,
+          "errorClassification": null,
+          "steps": {
+            "total": 1,
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "undefined": 0
+          }
+        },
+        {
+          "name": "Criar Leads para cada produto com empresa cliente ativo - Validação de conversão e distribuição",
+          "feature": "api",
+          "status": "passed",
+          "duration": 22676.81949,
+          "error": null,
+          "errorType": null,
+          "errorClassification": null,
+          "steps": {
+            "total": 1,
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "undefined": 0
+          }
+        },
+        {
+          "name": "Criar Leads para cada produto com empresa cliente ativo - Validação de conversão e distribuição",
+          "feature": "api",
+          "status": "passed",
+          "duration": 21810.316289,
+          "error": null,
+          "errorType": null,
+          "errorClassification": null,
+          "steps": {
+            "total": 1,
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "undefined": 0
+          }
+        },
+        {
+          "name": "Criar Leads para cada produto com empresa cliente ativo - Validação de conversão e distribuição",
+          "feature": "api",
+          "status": "passed",
+          "duration": 21240.730589,
+          "error": null,
+          "errorType": null,
+          "errorClassification": null,
+          "steps": {
+            "total": 1,
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "undefined": 0
+          }
+        },
+        {
+          "name": "Criar Leads para cada produto com empresa cliente ativo - Validação de conversão e distribuição",
+          "feature": "api",
+          "status": "passed",
+          "duration": 23060.908589,
+          "error": null,
+          "errorType": null,
+          "errorClassification": null,
+          "steps": {
+            "total": 1,
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "undefined": 0
+          }
+        },
+        {
+          "name": "Criar Leads para cada produto com empresa cliente ativo - Validação de conversão e distribuição",
+          "feature": "api",
+          "status": "passed",
+          "duration": 21984.538495,
+          "error": null,
+          "errorType": null,
+          "errorClassification": null,
+          "steps": {
+            "total": 1,
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "undefined": 0
+          }
+        },
+        {
+          "name": "Criar Leads para cada produto com empresa cliente ativo - Validação de conversão e distribuição",
+          "feature": "api",
+          "status": "passed",
+          "duration": 20600.758588,
+          "error": null,
+          "errorType": null,
+          "errorClassification": null,
+          "steps": {
+            "total": 1,
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "undefined": 0
+          }
+        },
+        {
+          "name": "Criar Leads para cada produto com empresa cliente ativo - Validação de conversão e distribuição",
+          "feature": "api",
+          "status": "passed",
+          "duration": 21849.101191,
+          "error": null,
+          "errorType": null,
+          "errorClassification": null,
+          "steps": {
+            "total": 1,
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "undefined": 0
+          }
+        },
+        {
+          "name": "Criar Leads para cada produto com empresa cliente ativo - Validação de conversão e distribuição",
+          "feature": "api",
+          "status": "passed",
+          "duration": 21542.43119,
+          "error": null,
+          "errorType": null,
+          "errorClassification": null,
+          "steps": {
+            "total": 1,
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "undefined": 0
+          }
+        },
+        {
+          "name": "Criar Leads para cada produto com empresa cliente ativo - Validação de conversão e distribuição",
+          "feature": "api",
+          "status": "passed",
+          "duration": 21061.496693,
+          "error": null,
+          "errorType": null,
+          "errorClassification": null,
+          "steps": {
+            "total": 1,
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "undefined": 0
+          }
+        },
+        {
+          "name": "Criar Leads para cada produto com empresa cliente ativo - Validação de conversão e distribuição",
+          "feature": "api",
+          "status": "passed",
+          "duration": 21295.015389,
+          "error": null,
+          "errorType": null,
+          "errorClassification": null,
+          "steps": {
+            "total": 1,
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "undefined": 0
+          }
+        },
+        {
+          "name": "Criar Leads para cada produto com empresa sem contratos ativos - Validação de não conversão",
+          "feature": "api",
+          "status": "passed",
+          "duration": 24807.93979,
+          "error": null,
+          "errorType": null,
+          "errorClassification": null,
+          "steps": {
+            "total": 1,
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "undefined": 0
+          }
+        },
+        {
+          "name": "Criar Leads para cada produto com empresa sem contratos ativos - Validação de não conversão",
+          "feature": "api",
+          "status": "passed",
+          "duration": 24475.264095,
+          "error": null,
+          "errorType": null,
+          "errorClassification": null,
+          "steps": {
+            "total": 1,
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "undefined": 0
+          }
+        },
+        {
+          "name": "Criar Leads para cada produto com empresa sem contratos ativos - Validação de não conversão",
+          "feature": "api",
+          "status": "passed",
+          "duration": 25951.781192,
+          "error": null,
+          "errorType": null,
+          "errorClassification": null,
+          "steps": {
+            "total": 1,
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "undefined": 0
+          }
+        },
+        {
+          "name": "Criar Leads para cada produto com empresa sem contratos ativos - Validação de não conversão",
+          "feature": "api",
+          "status": "passed",
+          "duration": 26435.681091,
+          "error": null,
+          "errorType": null,
+          "errorClassification": null,
+          "steps": {
+            "total": 1,
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "undefined": 0
+          }
+        },
+        {
+          "name": "Criar Leads para cada produto com empresa sem contratos ativos - Validação de não conversão",
+          "feature": "api",
+          "status": "passed",
+          "duration": 26502.894793,
+          "error": null,
+          "errorType": null,
+          "errorClassification": null,
+          "steps": {
+            "total": 1,
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "undefined": 0
+          }
+        },
+        {
+          "name": "Criar Leads para cada produto com empresa sem contratos ativos - Validação de não conversão",
+          "feature": "api",
+          "status": "passed",
+          "duration": 25873.514593,
+          "error": null,
+          "errorType": null,
+          "errorClassification": null,
+          "steps": {
+            "total": 1,
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "undefined": 0
+          }
+        },
+        {
+          "name": "Criar Leads para cada produto com empresa sem contratos ativos - Validação de não conversão",
+          "feature": "api",
+          "status": "passed",
+          "duration": 25809.504693,
+          "error": null,
+          "errorType": null,
+          "errorClassification": null,
+          "steps": {
+            "total": 1,
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "undefined": 0
+          }
+        },
+        {
+          "name": "Criar Leads para cada produto com empresa sem contratos ativos - Validação de não conversão",
+          "feature": "api",
+          "status": "passed",
+          "duration": 25785.296493,
+          "error": null,
+          "errorType": null,
+          "errorClassification": null,
+          "steps": {
+            "total": 1,
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "undefined": 0
+          }
+        },
+        {
+          "name": "Criar Leads para cada produto com empresa sem contratos ativos - Validação de não conversão",
+          "feature": "api",
+          "status": "passed",
+          "duration": 25228.86089,
+          "error": null,
+          "errorType": null,
+          "errorClassification": null,
+          "steps": {
+            "total": 1,
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "undefined": 0
+          }
+        },
+        {
+          "name": "Criar Leads para cada produto com empresa sem contratos ativos - Validação de não conversão",
+          "feature": "api",
+          "status": "passed",
+          "duration": 25010.378395,
+          "error": null,
+          "errorType": null,
+          "errorClassification": null,
+          "steps": {
+            "total": 1,
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "undefined": 0
+          }
+        },
+        {
+          "name": "Criar Leads para cada produto com empresa sem contratos ativos - Validação de não conversão",
+          "feature": "api",
+          "status": "passed",
+          "duration": 25567.044791,
+          "error": null,
+          "errorType": null,
+          "errorClassification": null,
+          "steps": {
+            "total": 1,
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "undefined": 0
+          }
+        },
+        {
+          "name": "Criar Leads para cada produto com empresa sem contratos ativos - Validação de não conversão",
+          "feature": "api",
+          "status": "passed",
+          "duration": 25764.378795,
+          "error": null,
+          "errorType": null,
+          "errorClassification": null,
+          "steps": {
+            "total": 1,
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "undefined": 0
+          }
+        },
+        {
+          "name": "Criar múltiplos Leads RA ADS e validar distribuição em massa após execução do scheduler",
+          "feature": "api",
+          "status": "passed",
+          "duration": 32540.503092,
+          "error": null,
+          "errorType": null,
+          "errorClassification": null,
+          "steps": {
+            "total": 1,
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "undefined": 0
+          }
+        },
+        {
+          "name": "Criar múltiplos Leads de diferentes produtos e validar que apenas RA ADS é distribuído",
+          "feature": "api",
+          "status": "passed",
+          "duration": 24721.063092,
+          "error": null,
+          "errorType": null,
+          "errorClassification": null,
+          "steps": {
+            "total": 1,
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "undefined": 0
+          }
+        },
+        {
+          "name": "Lead com Account com Reputacao UNDER_REVIEW deve ser marcado como Perdido Automático",
+          "feature": "api",
+          "status": "passed",
+          "duration": 27673.259592,
+          "error": null,
+          "errorType": null,
+          "errorClassification": null,
+          "steps": {
+            "total": 1,
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "undefined": 0
+          }
+        },
+        {
+          "name": "Lead com Account com Reputacao SUSPENDED deve ser marcado como Perdido Automático",
+          "feature": "api",
+          "status": "passed",
+          "duration": 27610.919193,
+          "error": null,
+          "errorType": null,
+          "errorClassification": null,
+          "steps": {
+            "total": 1,
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "undefined": 0
+          }
+        },
+        {
+          "name": "Lead com Account com pageviews < 4k deve ser marcado como Perdido Automático",
+          "feature": "api",
+          "status": "passed",
+          "duration": 27700.098288,
+          "error": null,
+          "errorType": null,
+          "errorClassification": null,
+          "steps": {
+            "total": 1,
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "undefined": 0
+          }
+        },
+        {
+          "name": "Lead com Account com checkout ativo deve ser marcado como Perdido Automático",
+          "feature": "api",
+          "status": "passed",
+          "duration": 57500.790689,
+          "error": null,
+          "errorType": null,
+          "errorClassification": null,
+          "steps": {
+            "total": 1,
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "undefined": 0
+          }
+        },
+        {
+          "name": "Lead com Account com checkout ativo E pageviews < 4k deve ser marcado como Perdido Automático (valida ordem)",
+          "feature": "api",
+          "status": "passed",
+          "duration": 27820.21459,
+          "error": null,
+          "errorType": null,
+          "errorClassification": null,
+          "steps": {
+            "total": 1,
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "undefined": 0
+          }
+        },
+        {
+          "name": "Lead com Account HighTouch e email corporativo deve converter para Owner",
+          "feature": "api",
+          "status": "passed",
+          "duration": 30875.633494,
+          "error": null,
+          "errorType": null,
+          "errorClassification": null,
+          "steps": {
+            "total": 1,
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "undefined": 0
+          }
+        },
+        {
+          "name": "Lead com Tipo_de_Venda__c = Up Selling deve ser marcado como Upsell e distribuído para SDR",
+          "feature": "api",
+          "status": "passed",
+          "duration": 22963.433093,
+          "error": null,
+          "errorType": null,
+          "errorClassification": null,
+          "steps": {
+            "total": 1,
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "undefined": 0
+          }
+        },
+        {
+          "name": "Lead com Account LowTouch e contrato ativo deve converter para Owner",
+          "feature": "api",
+          "status": "passed",
+          "duration": 30181.972493,
+          "error": null,
+          "errorType": null,
+          "errorClassification": null,
+          "steps": {
+            "total": 1,
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "undefined": 0
+          }
+        },
+        {
+          "name": "Lead com Account MidTouch e contrato ativo com email corporativo deve converter para Owner",
+          "feature": "api",
+          "status": "passed",
+          "duration": 30460.818094,
+          "error": null,
+          "errorType": null,
+          "errorClassification": null,
+          "steps": {
+            "total": 1,
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "undefined": 0
+          }
+        },
+        {
+          "name": "Lead com Account HighTouch, contrato ativo e email pessoal deve ser marcado como Perdido e enviar email",
+          "feature": "api",
+          "status": "passed",
+          "duration": 38504.529691,
+          "error": null,
+          "errorType": null,
+          "errorClassification": null,
+          "steps": {
+            "total": 1,
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "undefined": 0
+          }
+        },
+        {
+          "name": "Lead com Account HighTouch, contrato ativo e email corporativo deve converter para Owner",
+          "feature": "api",
+          "status": "passed",
+          "duration": 19170.167293,
+          "error": null,
+          "errorType": null,
+          "errorClassification": null,
+          "steps": {
+            "total": 1,
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "undefined": 0
+          }
+        },
+        {
+          "name": "Lead sem contrato, pageviews > 4k e checkout ativo deve ser marcado como Upsell e distribuído para SDR",
+          "feature": "api",
+          "status": "passed",
+          "duration": 23255.04709,
+          "error": null,
+          "errorType": null,
+          "errorClassification": null,
+          "steps": {
+            "total": 1,
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "undefined": 0
+          }
+        },
+        {
+          "name": "Lead sem contrato, pageviews > 4k e sem checkout deve ser marcado como Upsell e distribuído para SDR",
+          "feature": "api",
+          "status": "passed",
+          "duration": 23249.366994,
+          "error": null,
+          "errorType": null,
+          "errorClassification": null,
+          "steps": {
+            "total": 1,
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "undefined": 0
+          }
+        },
+        {
+          "name": "Lead sem contrato, pageviews < 4k e checkout ativo deve receber orientação e ser marcado como Perdido Automático",
+          "feature": "api",
+          "status": "passed",
+          "duration": 27848.757895,
+          "error": null,
+          "errorType": null,
+          "errorClassification": null,
+          "steps": {
+            "total": 1,
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "undefined": 0
+          }
+        },
+        {
+          "name": "Lead sem contrato com produto RA Reviews (não Brand Page) deve ir direto para distribuição de Leads",
+          "feature": "api",
+          "status": "passed",
+          "duration": 22469.579789,
+          "error": null,
+          "errorType": null,
+          "errorClassification": null,
+          "steps": {
+            "total": 1,
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "undefined": 0
+          }
+        },
+        {
+          "name": "Lead sem contrato com produto RA ADS (não Brand Page) deve ir direto para distribuição de Leads",
+          "feature": "api",
+          "status": "passed",
+          "duration": 23286.296693,
+          "error": null,
+          "errorType": null,
+          "errorClassification": null,
+          "steps": {
+            "total": 1,
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "undefined": 0
+          }
+        },
+        {
+          "name": "Lead sem contrato com produto HugMe (não Brand Page) deve ir direto para distribuição de Leads",
+          "feature": "api",
+          "status": "passed",
+          "duration": 22647.297495,
+          "error": null,
+          "errorType": null,
+          "errorClassification": null,
+          "steps": {
+            "total": 1,
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "undefined": 0
+          }
+        },
+        {
+          "name": "Lead com Account MidTouch, contrato ativo e email pessoal deve ser marcado como Perdido e enviar email",
+          "feature": "api",
+          "status": "passed",
+          "duration": 39725.096589,
+          "error": null,
+          "errorType": null,
+          "errorClassification": null,
+          "steps": {
+            "total": 1,
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "undefined": 0
+          }
+        },
+        {
+          "name": "Lead sem contrato com Brand Page Premium, pageviews > 4k e checkout ativo deve ser marcado como Upsell",
+          "feature": "api",
+          "status": "passed",
+          "duration": 23981.502892,
+          "error": null,
+          "errorType": null,
+          "errorClassification": null,
+          "steps": {
+            "total": 1,
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "undefined": 0
+          }
+        },
+        {
+          "name": "Lead sem contrato com Brand Page Premium, pageviews < 4k deve ser marcado como Perdido Automático",
+          "feature": "api",
+          "status": "passed",
+          "duration": 28312.066688,
+          "error": null,
+          "errorType": null,
+          "errorClassification": null,
+          "steps": {
+            "total": 1,
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "undefined": 0
+          }
+        },
+        {
+          "name": "Lead sem contrato com Brand Page Iniciante, pageviews > 4k e checkout ativo deve ser marcado como Upsell",
+          "feature": "api",
+          "status": "passed",
+          "duration": 23538.923991,
+          "error": null,
+          "errorType": null,
+          "errorClassification": null,
+          "steps": {
+            "total": 1,
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "undefined": 0
+          }
+        },
+        {
+          "name": "Lead sem contrato com Brand Page Iniciante, pageviews < 4k deve ser marcado como Perdido Automático",
+          "feature": "api",
+          "status": "passed",
+          "duration": 29240.533192,
+          "error": null,
+          "errorType": null,
+          "errorClassification": null,
+          "steps": {
+            "total": 1,
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "undefined": 0
+          }
+        },
+        {
+          "name": "Lead com Account com pageviews < 4k e produto Brand Page Premium deve ser marcado como Perdido Automático",
+          "feature": "api",
+          "status": "passed",
+          "duration": 28613.785689,
+          "error": null,
+          "errorType": null,
+          "errorClassification": null,
+          "steps": {
+            "total": 1,
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "undefined": 0
+          }
+        },
+        {
+          "name": "Lead com Account com pageviews < 4k e produto Brand Page Iniciante deve ser marcado como Perdido Automático",
+          "feature": "api",
+          "status": "passed",
+          "duration": 27970.32679,
+          "error": null,
+          "errorType": null,
+          "errorClassification": null,
+          "steps": {
+            "total": 1,
+            "passed": 1,
+            "failed": 0,
+            "skipped": 0,
+            "undefined": 0
+          }
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "totalExecutions": 1,
+    "totalTests": 61,
+    "totalPassed": 61,
+    "totalFailed": 0,
+    "averageDuration": 1596.181576458,
+    "successRate": 100
+  }
+}

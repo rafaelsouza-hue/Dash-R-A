@@ -15,6 +15,12 @@ class ChartsManager {
             secondary: '#64748b'
         };
         
+        // Registrar plugin de annotation se disponível
+        if (typeof Chart !== 'undefined' && Chart.register) {
+            // Plugin já está registrado via CDN, apenas verificar
+            console.log('Chart.js Annotation plugin disponível');
+        }
+        
         // Configurar Chart.js para tema dark
         this.configureDarkTheme();
     }
@@ -5262,7 +5268,10 @@ class ChartsManager {
     }
     
     /**
-     * Cria gráfico de timeline de marcos (scatter plot com eixo temporal)
+     * Cria gráfico de timeline de avanços por marco
+     * Eixo Y: Tipos de avanço (Estrutura, Funcionalidade, etc.)
+     * Eixo X: Marcos (Marco 1, Marco 2, etc.)
+     * Cada avanço tem bolinha no marco criado e linha tracejada para marcos seguintes
      */
     createMilestonesChart(projectMetrics) {
         const ctx = document.getElementById('chart-milestones');
@@ -5297,13 +5306,14 @@ class ChartsManager {
             return;
         }
         
-        // Log para debug - verificar ordenação
-        console.log('📅 Marcos ordenados (mais antigo → mais novo):', milestones.map((m, i) => ({
-            marco: i + 1,
-            nome: m.name,
-            data: m.date,
-            tipo: m.type
-        })));
+        // Mapeamento de tipos para nomes em português
+        const typeMapping = {
+            'infrastructure': 'Estrutura',
+            'feature': 'Funcionalidade',
+            'bugfix': 'Correção de Bugs',
+            'improvement': 'Melhoria',
+            'documentation': 'Documentação'
+        };
         
         // Cores baseadas no tipo
         const typeColors = {
@@ -5314,93 +5324,167 @@ class ChartsManager {
             'documentation': this.chartColors.warning
         };
         
-        // Agrupar marcos por tipo para criar datasets separados
-        // Permitir múltiplas bolinhas no mesmo marco (mesmo X)
-        const datasetsByType = {};
-        milestones.forEach((m, index) => {
-            const type = m.type || 'other';
-            if (!datasetsByType[type]) {
-                datasetsByType[type] = {
-                    label: this.getTypeLabel(type),
-                    data: [],
-                    backgroundColor: typeColors[type] || this.chartColors.info,
-                    borderColor: typeColors[type] || this.chartColors.info,
-                    pointRadius: 10,
-                    pointHoverRadius: 14,
-                    pointBorderWidth: 3,
-                    pointBorderColor: '#ffffff',
-                    pointBackgroundColor: typeColors[type] || this.chartColors.info,
-                    showLine: true, // Mostrar linha conectando os pontos
-                    tension: 0.3, // Linha suave
-                    fill: false,
-                    borderWidth: 2
-                };
-            }
-            // Usar número do marco (1-7) como X baseado na ordem cronológica
-            // Y pode variar para permitir múltiplas bolinhas no mesmo marco
-            const marcoNumber = index + 1;
-            // Distribuir verticalmente para evitar sobreposição quando houver múltiplas bolinhas
-            datasetsByType[type].data.push({
-                x: marcoNumber, // Número do marco (1 a 7)
-                y: marcoNumber, // Posição vertical baseada na ordem
-                milestone: m
-            });
-        });
-        
-        const datasets = Object.values(datasetsByType);
-        
-        // Adicionar uma linha de timeline conectando todos os marcos em ordem
-        // Criar pontos ordenados para a linha de timeline
-        const timelineData = milestones.map((m, index) => ({
-            x: index + 1,
-            y: index + 1,
-            milestone: m
+        // Identificar todos os tipos de avanço únicos presentes nos marcos
+        const uniqueTypes = [...new Set(milestones.map(m => m.type))];
+        const advancementTypes = uniqueTypes.map(type => ({
+            key: type,
+            label: typeMapping[type] || type,
+            color: typeColors[type] || this.chartColors.info
         }));
         
-        // Adicionar dataset de linha de timeline como primeiro dataset (fica atrás)
-        datasets.unshift({
-            label: 'Linha do Tempo',
-            data: timelineData,
-            borderColor: 'rgba(148, 163, 184, 0.4)', // Cinza claro e transparente
-            backgroundColor: 'transparent',
-            pointRadius: 0, // Sem pontos visíveis na linha
-            pointHoverRadius: 0,
-            showLine: true,
-            tension: 0.3,
-            fill: false,
-            borderWidth: 2,
-            borderDash: [5, 5], // Linha tracejada
-            order: -1 // Garantir que fica atrás dos outros datasets
+        // Criar labels para eixo X (Marco 1, Marco 2, etc.)
+        const labels = milestones.map((_, index) => `Marco ${index + 1}`);
+        
+        // Criar áreas de fundo coloridas para cada marco (delimitar área de cada marco)
+        // Cores alternadas para melhor visualização (aumentar opacidade para ficar mais visível)
+        const marcoColors = [
+            'rgba(59, 130, 246, 0.15)',   // Azul claro
+            'rgba(16, 185, 129, 0.15)',   // Verde claro
+            'rgba(139, 92, 246, 0.15)',   // Roxo claro
+            'rgba(236, 72, 153, 0.15)',   // Rosa claro
+            'rgba(251, 146, 60, 0.15)',   // Laranja claro
+            'rgba(34, 197, 94, 0.15)',   // Verde esmeralda claro
+            'rgba(168, 85, 247, 0.15)'    // Roxo violeta claro
+        ];
+        
+        // Criar áreas de fundo usando annotations (plugin Chart.js)
+        // Preparar annotations para criar retângulos verticais para cada marco
+        const marcoAnnotations = milestones.map((milestone, index) => {
+            const color = marcoColors[index % marcoColors.length];
+            const minY = -0.5;
+            const maxY = advancementTypes.length - 0.5;
+            const leftX = index - 0.5;
+            const rightX = index + 0.5;
+            
+            return {
+                type: 'box',
+                xMin: leftX,
+                xMax: rightX,
+                yMin: minY,
+                yMax: maxY,
+                backgroundColor: color,
+                borderColor: 'transparent',
+                borderWidth: 0
+            };
         });
+        
+        // Criar datasets vazios apenas para manter estrutura (as áreas serão annotations)
+        const marcoAreaDatasets = [];
+        
+        // Criar datasets para cada tipo de avanço
+        // Cada tipo terá uma linha que começa no primeiro marco deste tipo e continua tracejada até o último marco
+        const advancementDatasets = advancementTypes.map((advType, typeIndex) => {
+            // Encontrar todos os marcos deste tipo
+            const milestonesOfType = milestones
+                .map((m, index) => ({ milestone: m, index }))
+                .filter(({ milestone }) => milestone.type === advType.key);
+            
+            if (milestonesOfType.length === 0) {
+                return null;
+            }
+            
+            // Encontrar primeiro marco deste tipo
+            const firstMarcoIndex = milestonesOfType[0].index;
+            
+            // Criar dados: linha começa no primeiro marco deste tipo e continua até o último marco geral
+            // Isso mostra que o avanço está implementado e herdado por todos os marcos seguintes
+            // Usar formato {x, y} para compatibilidade com eixo linear
+            const data = [];
+            
+            // Do primeiro marco deste tipo até o último marco geral: linha tracejada
+            // Mostra que está implementado e herdado
+            for (let i = firstMarcoIndex; i < milestones.length; i++) {
+                data.push({
+                    x: i, // Índice numérico do marco
+                    y: typeIndex // Posição Y do tipo de avanço
+                });
+            }
+            
+            return {
+                label: advType.label,
+                data: data,
+                borderColor: advType.color,
+                backgroundColor: advType.color,
+                borderWidth: 2,
+                fill: false,
+                tension: 0, // Linha reta
+                pointRadius: 0, // Sem pontos na linha (bolinhas serão datasets separados)
+                pointHoverRadius: 0,
+                borderDash: [5, 5], // Linha tracejada para mostrar herança
+                spanGaps: false, // Não conectar gaps
+                order: 0 // Renderizar linhas primeiro
+            };
+        }).filter(dataset => dataset !== null);
+        
+        // Criar datasets para bolinhas (pontos de criação)
+        // Criar mapeamento: datasetIndex -> milestoneIndex para tooltip preciso
+        const datasetToMilestoneMap = new Map();
+        let pointDatasetIndex = 0;
+        
+        const pointDatasets = milestones.map((milestone, index) => {
+            const typeIndex = advancementTypes.findIndex(at => at.key === milestone.type);
+            if (typeIndex === -1) return null;
+            
+            const advType = advancementTypes[typeIndex];
+            
+            // Armazenar mapeamento: índice do dataset de bolinha -> índice do marco
+            // Considerar datasets de avanço + índice da bolinha
+            const currentDatasetIndex = advancementDatasets.length + pointDatasetIndex;
+            datasetToMilestoneMap.set(currentDatasetIndex, index);
+            pointDatasetIndex++;
+            
+            return {
+                type: 'scatter',
+                label: `${milestone.name} - Criação`,
+                data: [{
+                    x: index, // Índice numérico do marco (0, 1, 2, etc.)
+                    y: typeIndex // Posição Y do tipo de avanço
+                }],
+                backgroundColor: advType.color,
+                borderColor: '#ffffff',
+                borderWidth: 2,
+                pointRadius: 8,
+                pointHoverRadius: 10,
+                pointBackgroundColor: advType.color,
+                pointBorderColor: '#ffffff',
+                pointBorderWidth: 2,
+                showLine: false,
+                fill: false,
+                order: 1 // Renderizar bolinhas por cima das linhas
+            };
+        }).filter(dataset => dataset !== null);
 
-        // Ajustar altura do container
-        const chartContainer = ctx.closest('.chart-container');
-        if (chartContainer) {
-            chartContainer.style.minHeight = '450px';
-        }
+        // Combinar datasets (linhas de avanço e bolinhas)
+        // Áreas de marco são criadas via annotations, não como datasets
+        const allDatasets = [...advancementDatasets, ...pointDatasets];
 
         this.charts.milestones = new Chart(ctx, {
-            type: 'scatter',
+            type: 'line',
             data: {
-                datasets: datasets
+                labels: labels,
+                datasets: allDatasets
             },
             options: {
                 responsive: true,
-                maintainAspectRatio: false,
+                maintainAspectRatio: true,
                 plugins: {
-                    legend: {
+                    // Plugin de annotation para áreas de fundo dos marcos
+                    annotation: {
+                        annotations: marcoAnnotations
+                    },
+                    legend: { 
                         display: true,
-                        position: 'top',
+                        position: 'right',
                         labels: {
                             color: '#94a3b8',
                             usePointStyle: true,
                             padding: 15,
-                            font: {
-                                size: 12
-                            },
-                            filter: function(legendItem, chartData) {
-                                // Ocultar a linha de timeline da legenda
-                                return legendItem.text !== 'Linha do Tempo';
+                            // Filtrar legenda para mostrar apenas tipos de avanço (não os marcos individuais)
+                            filter: function(item, chart) {
+                                const datasetIndex = item.datasetIndex;
+                                // Mostrar apenas datasets de tipos de avanço (linhas tracejadas)
+                                // Ocultar datasets de bolinhas individuais (scatter)
+                                return datasetIndex < advancementDatasets.length;
                             }
                         }
                     },
@@ -5408,124 +5492,137 @@ class ChartsManager {
                         enabled: true,
                         callbacks: {
                             title: (items) => {
-                                const point = items[0];
-                                const milestone = point.raw.milestone;
-                                if (milestone) {
-                                    return milestone.name;
+                                const item = items[0];
+                                const datasetIndex = item.datasetIndex;
+                                
+                                // Verificar se é uma bolinha (dataset de scatter)
+                                if (item.dataset.type === 'scatter') {
+                                    // Usar mapeamento para identificar o marco correto
+                                    const milestoneIndex = datasetToMilestoneMap.get(datasetIndex);
+                                    if (milestoneIndex !== undefined && milestoneIndex < milestones.length) {
+                                        const milestone = milestones[milestoneIndex];
+                                        return milestone.name;
+                                    }
                                 }
                                 return '';
                             },
                             label: (context) => {
-                                const milestone = context.raw.milestone;
-                                if (milestone) {
-                                    const date = new Date(milestone.date);
-                                    return [
-                                        `📅 ${date.toLocaleDateString('pt-BR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}`,
-                                        `🏷️ Tipo: ${this.getTypeLabel(milestone.type || 'N/A')}`,
-                                        '',
-                                        `📝 ${milestone.description || 'Sem descrição'}`
-                                    ];
+                                const datasetIndex = context.datasetIndex;
+                                
+                                // Verificar se é uma bolinha (dataset de scatter)
+                                if (context.dataset.type === 'scatter') {
+                                    // Usar mapeamento para identificar o marco correto
+                                    const milestoneIndex = datasetToMilestoneMap.get(datasetIndex);
+                                    
+                                    if (milestoneIndex !== undefined && milestoneIndex < milestones.length) {
+                                        const milestone = milestones[milestoneIndex];
+                                        
+                                        return [
+                                            `Marco: ${milestone.name}`,
+                                            `Tipo: ${typeMapping[milestone.type] || milestone.type}`,
+                                            `Data de Criação: ${new Date(milestone.date).toLocaleDateString('pt-BR')}`,
+                                            `Descrição: ${milestone.description || 'Sem descrição'}`
+                                        ];
+                                    }
                                 }
-                                return '';
+                                // Para linhas tracejadas, não mostrar tooltip
+                                return [];
+                            },
+                            // Filtrar tooltips para mostrar apenas quando hover sobre bolinhas
+                            filter: function(tooltipItem) {
+                                // Mostrar tooltip apenas para bolinhas (scatter), não para linhas
+                                return tooltipItem.dataset.type === 'scatter';
                             }
-                        },
-                        backgroundColor: 'rgba(15, 23, 42, 0.98)',
-                        titleColor: '#f1f5f9',
-                        bodyColor: '#cbd5e1',
-                        borderColor: '#334155',
-                        borderWidth: 1,
-                        padding: 14,
-                        displayColors: true,
-                        boxPadding: 8,
-                        titleFont: {
-                            size: 14,
-                            weight: 'bold'
-                        },
-                        bodyFont: {
-                            size: 12
                         }
                     }
                 },
                 scales: {
                     x: {
-                        type: 'linear',
-                        beginAtZero: false,
-                        min: 0.5,
-                        max: milestones.length + 0.5,
-                        title: {
-                            display: true,
-                            text: 'Linha do Tempo - Marcos (1 a ' + milestones.length + ')',
-                            color: '#94a3b8',
-                            font: {
-                                size: 13,
-                                weight: 'bold'
-                            },
-                            padding: { top: 10, bottom: 5 }
-                        },
+                        type: 'linear', // Usar linear para suportar scatter plots com índices numéricos
+                        min: -0.5,
+                        max: milestones.length - 0.5,
                         ticks: {
-                            stepSize: 1,
                             color: '#94a3b8',
-                            font: {
-                                size: 12,
-                                weight: 'bold'
-                            },
+                            stepSize: 1,
                             callback: function(value) {
-                                // Mostrar apenas números inteiros de marcos
-                                if (Number.isInteger(value) && value >= 1 && value <= milestones.length) {
-                                    return 'Marco ' + value;
+                                const index = Math.round(value);
+                                if (index >= 0 && index < labels.length) {
+                                    return labels[index];
                                 }
                                 return '';
                             }
                         },
                         grid: {
-                            color: '#334155',
-                            drawBorder: true,
-                            borderColor: '#475569',
-                            lineWidth: 1
+                            color: '#334155'
+                        },
+                        title: {
+                            display: true,
+                            text: 'Marcos',
+                            color: '#94a3b8',
+                            font: {
+                                size: 14,
+                                weight: 'bold'
+                            }
                         }
                     },
                     y: {
-                        beginAtZero: false,
-                        min: 0,
-                        max: milestones.length + 1,
-                        title: {
-                            display: true,
-                            text: 'Marcos do Projeto',
-                            color: '#94a3b8',
-                            font: {
-                                size: 13,
-                                weight: 'bold'
-                            },
-                            padding: { top: 5, bottom: 10 }
+                        type: 'linear',
+                        // Customizar construção dos ticks para posicionar labels no centro das raias
+                        afterBuildTicks: function(scale) {
+                            // Criar ticks customizados apenas nos valores intermediários (centro das raias)
+                            // Cada tick deve ser um objeto com 'value' e 'label'
+                            const customTicks = [];
+                            for (let i = 0; i < advancementTypes.length; i++) {
+                                customTicks.push({
+                                    value: i + 0.5, // Valor intermediário (centro da raia)
+                                    label: advancementTypes[i].label
+                                });
+                            }
+                            // Substituir os ticks padrão pelos customizados
+                            scale.ticks = customTicks;
                         },
                         ticks: {
                             color: '#94a3b8',
-                            stepSize: 1,
-                            callback: function(value, index) {
-                                // Mostrar nome do marco no eixo Y
-                                const milestoneIndex = Math.round(value) - 1;
-                                if (milestoneIndex >= 0 && milestoneIndex < milestones.length) {
-                                    const name = milestones[milestoneIndex].name;
-                                    return name.length > 30 ? name.substring(0, 27) + '...' : name;
+                            // Usar callback para exibir labels dos ticks customizados
+                            callback: function(value, index, ticks) {
+                                // Se temos ticks customizados com labels, usar diretamente
+                                if (ticks && ticks[index] && typeof ticks[index] === 'object' && ticks[index].label) {
+                                    return ticks[index].label;
+                                }
+                                // Fallback: verificar se é valor intermediário
+                                const remainder = value % 1;
+                                if (Math.abs(remainder - 0.5) < 0.01) {
+                                    const idx = Math.round(value - 0.5);
+                                    if (idx >= 0 && idx < advancementTypes.length) {
+                                        return advancementTypes[idx].label;
+                                    }
                                 }
                                 return '';
                             },
-                            maxTicksLimit: milestones.length + 2,
-                            font: {
-                                size: 11
-                            }
+                            // Ajustar padding para melhor posicionamento
+                            padding: 10,
+                            // Desabilitar autoSkip para garantir que todos os ticks sejam exibidos
+                            autoSkip: false
                         },
                         grid: {
                             color: '#334155',
-                            drawOnChartArea: true,
-                            drawBorder: true,
-                            borderColor: '#475569'
-                        }
+                            // Manter linhas do grid nos valores inteiros (0, 1, 2, etc.)
+                            drawOnChartArea: true
+                        },
+                        title: {
+                            display: true,
+                            text: 'Avanço',
+                            color: '#94a3b8',
+                            font: {
+                                size: 14,
+                                weight: 'bold'
+                            },
+                            // Centralizar verticalmente com as raias
+                            align: 'center' // Centraliza o título verticalmente no eixo Y
+                        },
+                        min: -0.5,
+                        max: advancementTypes.length - 0.5
                     }
-                },
-                interaction: {
-                    intersect: false,
-                    mode: 'point'
                 }
             }
         });

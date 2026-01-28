@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="assets/css/dashboard.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1/dist/chartjs-plugin-annotation.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -16,7 +17,7 @@
             <div class="header-actions">
                 <button id="refreshBtn" class="btn btn-primary">🔄 Atualizar</button>
                 <button id="exportBtn" class="btn btn-secondary">📥 Exportar Dados</button>
-                <button id="cleanupBtn" class="btn btn-danger">🗑️ Limpar Dados</button>
+                <!-- Botão Limpar Dados removido para GitHub Pages - funcionalidade apenas local -->
             </div>
         </header>
 
@@ -515,50 +516,7 @@
         </div>
     </div>
 
-    <!-- Modal de Limpeza de Dados -->
-    <div id="cleanupModal" class="modal">
-        <div class="modal-content">
-            <span class="modal-close" onclick="dashboard.closeCleanupModal()">&times;</span>
-            <h2>🗑️ Limpar Dados do Histórico</h2>
-            <div id="cleanup-modal-body">
-                <p style="margin-bottom: 20px; color: var(--text-secondary);">
-                    Selecione o período de tempo para remover execuções do histórico. Esta ação não pode ser desfeita.
-                </p>
-                
-                <div class="cleanup-form">
-                    <div class="form-group">
-                        <label for="cleanup-start-date">Data/Hora Inicial:</label>
-                        <input type="date" id="cleanup-start-date" class="form-input" required>
-                        <input type="time" id="cleanup-start-time" class="form-input" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="cleanup-end-date">Data/Hora Final:</label>
-                        <input type="date" id="cleanup-end-date" class="form-input" required>
-                        <input type="time" id="cleanup-end-time" class="form-input" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>
-                            <input type="checkbox" id="cleanup-confirm" required>
-                            <span style="margin-left: 8px;">Confirmo que desejo excluir os dados deste período</span>
-                        </label>
-                    </div>
-                    
-                    <div id="cleanup-preview" style="margin: 20px 0; padding: 15px; background: #f1f5f9; border-radius: 6px; display: none;">
-                        <strong>Pré-visualização:</strong>
-                        <p id="cleanup-preview-text" style="margin-top: 10px; color: var(--text-secondary);"></p>
-                    </div>
-                    
-                    <div class="form-actions">
-                        <button id="cleanup-preview-btn" class="btn btn-secondary">👁️ Pré-visualizar</button>
-                        <button id="cleanup-execute-btn" class="btn btn-danger">🗑️ Limpar Dados</button>
-                        <button onclick="dashboard.closeCleanupModal()" class="btn btn-secondary">Cancelar</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <!-- Modal de Limpeza de Dados removido para GitHub Pages - funcionalidade apenas local -->
 
     <script src="assets/js/data-loader.js?v=20260127-2"></script>
     <script src="assets/js/environment-analyzer.js"></script>
