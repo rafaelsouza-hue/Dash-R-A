@@ -364,6 +364,8 @@ section h3 {
     border-bottom: 2px solid var(--border-color);
     overflow-x: auto;
     scrollbar-width: thin;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
 }
 
 .tabs-header::-webkit-scrollbar {
@@ -380,9 +382,9 @@ section h3 {
 }
 
 .tab-btn {
-    flex: 1;
-    min-width: 150px;
-    padding: 12px 20px;
+    flex: 1 1 auto;
+    min-width: 100px; /* Reduzido para caber as 5 abas em telas menores */
+    padding: 12px 14px;
     background: transparent;
     border: none;
     border-bottom: 3px solid transparent;
@@ -449,17 +451,18 @@ section h3 {
     }
 }
 
-/* Responsividade para abas */
+/* Responsividade para abas - garantir que as 5 abas (Visão Geral, Execução, Criação, Cobertura, Gestão) apareçam */
 @media (max-width: 768px) {
     .tabs-header {
         flex-wrap: nowrap;
         overflow-x: auto;
+        padding-bottom: 4px;
     }
     
     .tab-btn {
-        min-width: 120px;
-        padding: 14px 16px;
-        font-size: 0.85rem;
+        min-width: 90px; /* Todas as 5 abas visíveis com scroll se necessário */
+        padding: 12px 10px;
+        font-size: 0.8rem;
     }
     
     .tab-icon {
@@ -467,7 +470,7 @@ section h3 {
     }
     
     .tab-label {
-        display: none;
+        display: inline-block; /* Manter label visível para identificar Execução e Visão Geral */
     }
     
     .tab-btn.active .tab-label {

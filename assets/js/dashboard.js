@@ -795,14 +795,19 @@ class Dashboard {
         if (uiMetric) uiMetric.textContent = uiTests || 0;
         
         // Renderizar gráficos de execução
-        if (this.historyData) {
+        if (this.historyData && window.chartsManager) {
             window.chartsManager.updateAll(normalizedExecutions, this.evolutionData);
         }
         
-        // Renderizar tabela
+        // Renderizar tabela (sempre, mesmo com 0 execuções, para exibir "Nenhuma execução encontrada")
         if (this.historyData) {
             this.renderTable(normalizedExecutions);
             this.populateFilters();
+        } else {
+            const tbody = document.getElementById('executions-tbody');
+            if (tbody) {
+                tbody.innerHTML = '<tr><td colspan="15" class="loading">Nenhum histórico de execução carregado. Use o botão Atualizar ou verifique o arquivo history.json.</td></tr>';
+            }
         }
     }
 
