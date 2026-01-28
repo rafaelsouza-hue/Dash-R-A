@@ -1,1 +1,975 @@
-{"generatedAt":null,"summary":{"totalObjects":0},"milestones":[],"completeness":[]}
+{
+  "generatedAt": "2026-01-27T22:31:14.277Z",
+  "summary": {
+    "totalObjects": 23,
+    "averageCompleteness": 57,
+    "businessRulesCount": 11,
+    "milestonesCount": 7,
+    "evolutionEvents": 15
+  },
+  "temporalEvolution": {
+    "events": [
+      {
+        "date": "2025-12-11",
+        "object": "ContractReajuste",
+        "type": "business_rule",
+        "timestamp": "2025-12-11T19:02:14.640Z"
+      },
+      {
+        "date": "2025-12-11",
+        "object": "Asset",
+        "type": "business_rule",
+        "timestamp": "2025-12-11T19:02:16.603Z"
+      },
+      {
+        "date": "2026-01-08",
+        "object": "CALCULO_IMPOSTOS",
+        "type": "business_rule",
+        "timestamp": "2026-01-08T18:08:29.462Z"
+      },
+      {
+        "date": "2026-01-08",
+        "object": "Product2",
+        "type": "business_rule",
+        "timestamp": "2026-01-08T18:08:29.462Z"
+      },
+      {
+        "date": "2026-01-14",
+        "object": "Account",
+        "type": "record_types",
+        "timestamp": "2026-01-14T18:02:26.815Z"
+      },
+      {
+        "date": "2026-01-14",
+        "object": "Contract",
+        "type": "record_types",
+        "timestamp": "2026-01-14T18:02:26.856Z"
+      },
+      {
+        "date": "2026-01-14",
+        "object": "Account",
+        "type": "enriched_data",
+        "timestamp": "2026-01-14T18:32:48.491Z"
+      },
+      {
+        "date": "2026-01-14",
+        "object": "Contract",
+        "type": "enriched_data",
+        "timestamp": "2026-01-14T18:33:17.417Z"
+      },
+      {
+        "date": "2026-01-14",
+        "object": "Account",
+        "type": "business_rule",
+        "timestamp": "2026-01-14T18:44:11.416Z"
+      },
+      {
+        "date": "2026-01-14",
+        "object": "Lead",
+        "type": "business_rule",
+        "timestamp": "2026-01-14T18:44:11.435Z"
+      },
+      {
+        "date": "2026-01-14",
+        "object": "Opportunity",
+        "type": "business_rule",
+        "timestamp": "2026-01-14T18:44:11.463Z"
+      },
+      {
+        "date": "2026-01-14",
+        "object": "Contract",
+        "type": "business_rule",
+        "timestamp": "2026-01-14T18:44:11.494Z"
+      },
+      {
+        "date": "2026-01-14",
+        "object": "Quote",
+        "type": "business_rule",
+        "timestamp": "2026-01-14T18:44:11.518Z"
+      },
+      {
+        "date": "2026-01-14",
+        "object": "Contact",
+        "type": "business_rule",
+        "timestamp": "2026-01-14T18:44:11.540Z"
+      },
+      {
+        "date": "2026-01-14",
+        "object": "Case",
+        "type": "business_rule",
+        "timestamp": "2026-01-14T18:44:11.573Z"
+      }
+    ],
+    "byDate": {
+      "2026-01-14": [
+        {
+          "date": "2026-01-14",
+          "object": "Account",
+          "type": "enriched_data",
+          "timestamp": "2026-01-14T18:32:48.491Z"
+        },
+        {
+          "date": "2026-01-14",
+          "object": "Account",
+          "type": "record_types",
+          "timestamp": "2026-01-14T18:02:26.815Z"
+        },
+        {
+          "date": "2026-01-14",
+          "object": "Contract",
+          "type": "enriched_data",
+          "timestamp": "2026-01-14T18:33:17.417Z"
+        },
+        {
+          "date": "2026-01-14",
+          "object": "Contract",
+          "type": "record_types",
+          "timestamp": "2026-01-14T18:02:26.856Z"
+        }
+      ]
+    },
+    "metricsByMonth": [
+      {
+        "month": "2025-12",
+        "monthLabel": "Dez 2025",
+        "year": 2025,
+        "monthNumber": 12,
+        "totalObjects": 0,
+        "newObjects": 0,
+        "totalBusinessRules": 2,
+        "newBusinessRules": 2,
+        "events": 2,
+        "uniqueObjects": 0
+      },
+      {
+        "month": "2026-01",
+        "monthLabel": "Jan 2026",
+        "year": 2026,
+        "monthNumber": 1,
+        "totalObjects": 2,
+        "newObjects": 2,
+        "totalBusinessRules": 11,
+        "newBusinessRules": 9,
+        "events": 13,
+        "uniqueObjects": 2
+      }
+    ],
+    "totalUniqueObjects": 2
+  },
+  "businessRules": {
+    "total": 11,
+    "files": [
+      {
+        "name": "REGRAS_NEGOCIO_Account.md",
+        "size": 53669,
+        "lastModified": "2026-01-14T18:44:11.416Z",
+        "completeness": {
+          "sections": {
+            "descricao": true,
+            "deParaCampos": true,
+            "flows": true,
+            "fluxosEndToEnd": true,
+            "dependenciasCampos": true,
+            "regrasProcesso": true,
+            "validations": true,
+            "triggers": true,
+            "exemplos": true
+          },
+          "sectionsFound": 9,
+          "sectionsTotal": 9,
+          "wordCount": 6497,
+          "lineCount": 1275,
+          "score": 100
+        }
+      },
+      {
+        "name": "REGRAS_NEGOCIO_Asset.md",
+        "size": 15630,
+        "lastModified": "2025-12-11T19:02:16.603Z",
+        "completeness": {
+          "sections": {
+            "descricao": false,
+            "deParaCampos": true,
+            "flows": true,
+            "fluxosEndToEnd": false,
+            "dependenciasCampos": true,
+            "regrasProcesso": true,
+            "validations": false,
+            "triggers": false,
+            "exemplos": true
+          },
+          "sectionsFound": 5,
+          "sectionsTotal": 9,
+          "wordCount": 2036,
+          "lineCount": 251,
+          "score": 56
+        }
+      },
+      {
+        "name": "REGRAS_NEGOCIO_CALCULO_IMPOSTOS.md",
+        "size": 6643,
+        "lastModified": "2026-01-08T18:08:29.462Z",
+        "completeness": {
+          "sections": {
+            "descricao": true,
+            "deParaCampos": false,
+            "flows": false,
+            "fluxosEndToEnd": false,
+            "dependenciasCampos": false,
+            "regrasProcesso": true,
+            "validations": false,
+            "triggers": true,
+            "exemplos": true
+          },
+          "sectionsFound": 4,
+          "sectionsTotal": 9,
+          "wordCount": 972,
+          "lineCount": 116,
+          "score": 44
+        }
+      },
+      {
+        "name": "REGRAS_NEGOCIO_Case.md",
+        "size": 15871,
+        "lastModified": "2026-01-14T18:44:11.573Z",
+        "completeness": {
+          "sections": {
+            "descricao": true,
+            "deParaCampos": true,
+            "flows": true,
+            "fluxosEndToEnd": true,
+            "dependenciasCampos": true,
+            "regrasProcesso": true,
+            "validations": true,
+            "triggers": true,
+            "exemplos": true
+          },
+          "sectionsFound": 9,
+          "sectionsTotal": 9,
+          "wordCount": 2038,
+          "lineCount": 472,
+          "score": 100
+        }
+      },
+      {
+        "name": "REGRAS_NEGOCIO_Contact.md",
+        "size": 21389,
+        "lastModified": "2026-01-14T18:44:11.540Z",
+        "completeness": {
+          "sections": {
+            "descricao": true,
+            "deParaCampos": true,
+            "flows": true,
+            "fluxosEndToEnd": true,
+            "dependenciasCampos": true,
+            "regrasProcesso": true,
+            "validations": true,
+            "triggers": true,
+            "exemplos": true
+          },
+          "sectionsFound": 9,
+          "sectionsTotal": 9,
+          "wordCount": 2522,
+          "lineCount": 608,
+          "score": 100
+        }
+      },
+      {
+        "name": "REGRAS_NEGOCIO_Contract.md",
+        "size": 28860,
+        "lastModified": "2026-01-14T18:44:11.494Z",
+        "completeness": {
+          "sections": {
+            "descricao": true,
+            "deParaCampos": true,
+            "flows": true,
+            "fluxosEndToEnd": true,
+            "dependenciasCampos": true,
+            "regrasProcesso": true,
+            "validations": true,
+            "triggers": true,
+            "exemplos": true
+          },
+          "sectionsFound": 9,
+          "sectionsTotal": 9,
+          "wordCount": 3634,
+          "lineCount": 707,
+          "score": 100
+        }
+      },
+      {
+        "name": "REGRAS_NEGOCIO_ContractReajuste.md",
+        "size": 21426,
+        "lastModified": "2025-12-11T19:02:14.640Z",
+        "completeness": {
+          "sections": {
+            "descricao": false,
+            "deParaCampos": true,
+            "flows": true,
+            "fluxosEndToEnd": false,
+            "dependenciasCampos": true,
+            "regrasProcesso": true,
+            "validations": false,
+            "triggers": true,
+            "exemplos": true
+          },
+          "sectionsFound": 6,
+          "sectionsTotal": 9,
+          "wordCount": 2424,
+          "lineCount": 346,
+          "score": 67
+        }
+      },
+      {
+        "name": "REGRAS_NEGOCIO_Lead.md",
+        "size": 22428,
+        "lastModified": "2026-01-14T18:44:11.435Z",
+        "completeness": {
+          "sections": {
+            "descricao": true,
+            "deParaCampos": true,
+            "flows": true,
+            "fluxosEndToEnd": true,
+            "dependenciasCampos": true,
+            "regrasProcesso": true,
+            "validations": true,
+            "triggers": true,
+            "exemplos": true
+          },
+          "sectionsFound": 9,
+          "sectionsTotal": 9,
+          "wordCount": 2739,
+          "lineCount": 526,
+          "score": 100
+        }
+      },
+      {
+        "name": "REGRAS_NEGOCIO_Opportunity.md",
+        "size": 18184,
+        "lastModified": "2026-01-14T18:44:11.463Z",
+        "completeness": {
+          "sections": {
+            "descricao": true,
+            "deParaCampos": true,
+            "flows": true,
+            "fluxosEndToEnd": true,
+            "dependenciasCampos": true,
+            "regrasProcesso": true,
+            "validations": true,
+            "triggers": true,
+            "exemplos": true
+          },
+          "sectionsFound": 9,
+          "sectionsTotal": 9,
+          "wordCount": 2235,
+          "lineCount": 498,
+          "score": 100
+        }
+      },
+      {
+        "name": "REGRAS_NEGOCIO_Product2.md",
+        "size": 10195,
+        "lastModified": "2026-01-08T18:08:29.462Z",
+        "completeness": {
+          "sections": {
+            "descricao": false,
+            "deParaCampos": false,
+            "flows": false,
+            "fluxosEndToEnd": false,
+            "dependenciasCampos": true,
+            "regrasProcesso": true,
+            "validations": true,
+            "triggers": true,
+            "exemplos": true
+          },
+          "sectionsFound": 5,
+          "sectionsTotal": 9,
+          "wordCount": 1263,
+          "lineCount": 235,
+          "score": 56
+        }
+      },
+      {
+        "name": "REGRAS_NEGOCIO_Quote.md",
+        "size": 15771,
+        "lastModified": "2026-01-14T18:44:11.518Z",
+        "completeness": {
+          "sections": {
+            "descricao": true,
+            "deParaCampos": true,
+            "flows": true,
+            "fluxosEndToEnd": true,
+            "dependenciasCampos": true,
+            "regrasProcesso": true,
+            "validations": true,
+            "triggers": true,
+            "exemplos": true
+          },
+          "sectionsFound": 9,
+          "sectionsTotal": 9,
+          "wordCount": 1937,
+          "lineCount": 445,
+          "score": 100
+        }
+      }
+    ],
+    "lastUpdated": "2026-01-14T18:44:11.573Z",
+    "analysis": {
+      "totalFiles": 11,
+      "sectionStats": {
+        "descricao": {
+          "name": "Descrição",
+          "percentage": 73,
+          "count": 8,
+          "total": 11,
+          "filesWithout": [
+            "Asset",
+            "ContractReajuste",
+            "Product2"
+          ]
+        },
+        "deParaCampos": {
+          "name": "De-Para de Campos",
+          "percentage": 82,
+          "count": 9,
+          "total": 11,
+          "filesWithout": [
+            "CALCULO_IMPOSTOS",
+            "Product2"
+          ]
+        },
+        "flows": {
+          "name": "Flows Relacionados",
+          "percentage": 82,
+          "count": 9,
+          "total": 11,
+          "filesWithout": [
+            "CALCULO_IMPOSTOS",
+            "Product2"
+          ]
+        },
+        "fluxosEndToEnd": {
+          "name": "Fluxos End-To-End",
+          "percentage": 64,
+          "count": 7,
+          "total": 11,
+          "filesWithout": [
+            "Asset",
+            "CALCULO_IMPOSTOS",
+            "ContractReajuste",
+            "Product2"
+          ]
+        },
+        "dependenciasCampos": {
+          "name": "Dependências entre Campos",
+          "percentage": 91,
+          "count": 10,
+          "total": 11,
+          "filesWithout": [
+            "CALCULO_IMPOSTOS"
+          ]
+        },
+        "regrasProcesso": {
+          "name": "Regras de Processo",
+          "percentage": 100,
+          "count": 11,
+          "total": 11,
+          "filesWithout": []
+        },
+        "validations": {
+          "name": "Validações",
+          "percentage": 73,
+          "count": 8,
+          "total": 11,
+          "filesWithout": [
+            "Asset",
+            "CALCULO_IMPOSTOS",
+            "ContractReajuste"
+          ]
+        },
+        "triggers": {
+          "name": "Triggers",
+          "percentage": 91,
+          "count": 10,
+          "total": 11,
+          "filesWithout": [
+            "Asset"
+          ]
+        },
+        "exemplos": {
+          "name": "Exemplos",
+          "percentage": 100,
+          "count": 11,
+          "total": 11,
+          "filesWithout": []
+        }
+      },
+      "sortedSections": [
+        {
+          "key": "fluxosEndToEnd",
+          "name": "Fluxos End-To-End",
+          "percentage": 64,
+          "count": 7,
+          "total": 11,
+          "filesWithout": [
+            "Asset",
+            "CALCULO_IMPOSTOS",
+            "ContractReajuste",
+            "Product2"
+          ]
+        },
+        {
+          "key": "descricao",
+          "name": "Descrição",
+          "percentage": 73,
+          "count": 8,
+          "total": 11,
+          "filesWithout": [
+            "Asset",
+            "ContractReajuste",
+            "Product2"
+          ]
+        },
+        {
+          "key": "validations",
+          "name": "Validações",
+          "percentage": 73,
+          "count": 8,
+          "total": 11,
+          "filesWithout": [
+            "Asset",
+            "CALCULO_IMPOSTOS",
+            "ContractReajuste"
+          ]
+        },
+        {
+          "key": "deParaCampos",
+          "name": "De-Para de Campos",
+          "percentage": 82,
+          "count": 9,
+          "total": 11,
+          "filesWithout": [
+            "CALCULO_IMPOSTOS",
+            "Product2"
+          ]
+        },
+        {
+          "key": "flows",
+          "name": "Flows Relacionados",
+          "percentage": 82,
+          "count": 9,
+          "total": 11,
+          "filesWithout": [
+            "CALCULO_IMPOSTOS",
+            "Product2"
+          ]
+        },
+        {
+          "key": "dependenciasCampos",
+          "name": "Dependências entre Campos",
+          "percentage": 91,
+          "count": 10,
+          "total": 11,
+          "filesWithout": [
+            "CALCULO_IMPOSTOS"
+          ]
+        },
+        {
+          "key": "triggers",
+          "name": "Triggers",
+          "percentage": 91,
+          "count": 10,
+          "total": 11,
+          "filesWithout": [
+            "Asset"
+          ]
+        },
+        {
+          "key": "regrasProcesso",
+          "name": "Regras de Processo",
+          "percentage": 100,
+          "count": 11,
+          "total": 11,
+          "filesWithout": []
+        },
+        {
+          "key": "exemplos",
+          "name": "Exemplos",
+          "percentage": 100,
+          "count": 11,
+          "total": 11,
+          "filesWithout": []
+        }
+      ],
+      "averageScore": 84
+    }
+  },
+  "completeness": [
+    {
+      "object": "Account",
+      "checks": {
+        "recordTypes": true,
+        "enrichedData": true,
+        "fieldsAnalysis": true,
+        "testSuggestions": true,
+        "endToEndFlows": true,
+        "consolidatedDoc": true
+      },
+      "percentage": 100,
+      "passed": 6,
+      "total": 6
+    },
+    {
+      "object": "Contract",
+      "checks": {
+        "recordTypes": true,
+        "enrichedData": true,
+        "fieldsAnalysis": true,
+        "testSuggestions": true,
+        "endToEndFlows": true,
+        "consolidatedDoc": true
+      },
+      "percentage": 100,
+      "passed": 6,
+      "total": 6
+    },
+    {
+      "object": "Contact",
+      "checks": {
+        "recordTypes": false,
+        "enrichedData": false,
+        "fieldsAnalysis": true,
+        "testSuggestions": true,
+        "endToEndFlows": true,
+        "consolidatedDoc": true
+      },
+      "percentage": 67,
+      "passed": 4,
+      "total": 6
+    },
+    {
+      "object": "Lead",
+      "checks": {
+        "recordTypes": false,
+        "enrichedData": false,
+        "fieldsAnalysis": true,
+        "testSuggestions": true,
+        "endToEndFlows": true,
+        "consolidatedDoc": true
+      },
+      "percentage": 67,
+      "passed": 4,
+      "total": 6
+    },
+    {
+      "object": "Opportunity",
+      "checks": {
+        "recordTypes": false,
+        "enrichedData": false,
+        "fieldsAnalysis": true,
+        "testSuggestions": true,
+        "endToEndFlows": true,
+        "consolidatedDoc": true
+      },
+      "percentage": 67,
+      "passed": 4,
+      "total": 6
+    },
+    {
+      "object": "Quote",
+      "checks": {
+        "recordTypes": false,
+        "enrichedData": false,
+        "fieldsAnalysis": true,
+        "testSuggestions": true,
+        "endToEndFlows": true,
+        "consolidatedDoc": true
+      },
+      "percentage": 67,
+      "passed": 4,
+      "total": 6
+    },
+    {
+      "object": "Auditoria__c",
+      "checks": {
+        "recordTypes": false,
+        "enrichedData": false,
+        "fieldsAnalysis": true,
+        "testSuggestions": false,
+        "endToEndFlows": true,
+        "consolidatedDoc": true
+      },
+      "percentage": 50,
+      "passed": 3,
+      "total": 6
+    },
+    {
+      "object": "Campaign",
+      "checks": {
+        "recordTypes": false,
+        "enrichedData": false,
+        "fieldsAnalysis": true,
+        "testSuggestions": false,
+        "endToEndFlows": true,
+        "consolidatedDoc": true
+      },
+      "percentage": 50,
+      "passed": 3,
+      "total": 6
+    },
+    {
+      "object": "Contratos_Ativos__c",
+      "checks": {
+        "recordTypes": false,
+        "enrichedData": false,
+        "fieldsAnalysis": true,
+        "testSuggestions": false,
+        "endToEndFlows": true,
+        "consolidatedDoc": true
+      },
+      "percentage": 50,
+      "passed": 3,
+      "total": 6
+    },
+    {
+      "object": "Contrato_Reajuste__c",
+      "checks": {
+        "recordTypes": false,
+        "enrichedData": false,
+        "fieldsAnalysis": true,
+        "testSuggestions": false,
+        "endToEndFlows": true,
+        "consolidatedDoc": true
+      },
+      "percentage": 50,
+      "passed": 3,
+      "total": 6
+    },
+    {
+      "object": "CSAT__c",
+      "checks": {
+        "recordTypes": false,
+        "enrichedData": false,
+        "fieldsAnalysis": true,
+        "testSuggestions": false,
+        "endToEndFlows": true,
+        "consolidatedDoc": true
+      },
+      "percentage": 50,
+      "passed": 3,
+      "total": 6
+    },
+    {
+      "object": "DistribuicaoLead__c",
+      "checks": {
+        "recordTypes": false,
+        "enrichedData": false,
+        "fieldsAnalysis": true,
+        "testSuggestions": false,
+        "endToEndFlows": true,
+        "consolidatedDoc": true
+      },
+      "percentage": 50,
+      "passed": 3,
+      "total": 6
+    },
+    {
+      "object": "Distribuicao__c",
+      "checks": {
+        "recordTypes": false,
+        "enrichedData": false,
+        "fieldsAnalysis": true,
+        "testSuggestions": false,
+        "endToEndFlows": true,
+        "consolidatedDoc": true
+      },
+      "percentage": 50,
+      "passed": 3,
+      "total": 6
+    },
+    {
+      "object": "Di_rio_de_Bordo__c",
+      "checks": {
+        "recordTypes": false,
+        "enrichedData": false,
+        "fieldsAnalysis": true,
+        "testSuggestions": false,
+        "endToEndFlows": true,
+        "consolidatedDoc": true
+      },
+      "percentage": 50,
+      "passed": 3,
+      "total": 6
+    },
+    {
+      "object": "Event",
+      "checks": {
+        "recordTypes": false,
+        "enrichedData": false,
+        "fieldsAnalysis": true,
+        "testSuggestions": false,
+        "endToEndFlows": true,
+        "consolidatedDoc": true
+      },
+      "percentage": 50,
+      "passed": 3,
+      "total": 6
+    },
+    {
+      "object": "EventosBot__c",
+      "checks": {
+        "recordTypes": false,
+        "enrichedData": false,
+        "fieldsAnalysis": true,
+        "testSuggestions": false,
+        "endToEndFlows": true,
+        "consolidatedDoc": true
+      },
+      "percentage": 50,
+      "passed": 3,
+      "total": 6
+    },
+    {
+      "object": "IndiceEconomico__c",
+      "checks": {
+        "recordTypes": false,
+        "enrichedData": false,
+        "fieldsAnalysis": true,
+        "testSuggestions": false,
+        "endToEndFlows": true,
+        "consolidatedDoc": true
+      },
+      "percentage": 50,
+      "passed": 3,
+      "total": 6
+    },
+    {
+      "object": "Leads_com_oportunidades_e_contratos__c",
+      "checks": {
+        "recordTypes": false,
+        "enrichedData": false,
+        "fieldsAnalysis": true,
+        "testSuggestions": false,
+        "endToEndFlows": true,
+        "consolidatedDoc": true
+      },
+      "percentage": 50,
+      "passed": 3,
+      "total": 6
+    },
+    {
+      "object": "Onboarding__c",
+      "checks": {
+        "recordTypes": false,
+        "enrichedData": false,
+        "fieldsAnalysis": true,
+        "testSuggestions": false,
+        "endToEndFlows": true,
+        "consolidatedDoc": true
+      },
+      "percentage": 50,
+      "passed": 3,
+      "total": 6
+    },
+    {
+      "object": "Product2",
+      "checks": {
+        "recordTypes": false,
+        "enrichedData": false,
+        "fieldsAnalysis": true,
+        "testSuggestions": false,
+        "endToEndFlows": true,
+        "consolidatedDoc": true
+      },
+      "percentage": 50,
+      "passed": 3,
+      "total": 6
+    },
+    {
+      "object": "RespostaPesquisa__c",
+      "checks": {
+        "recordTypes": false,
+        "enrichedData": false,
+        "fieldsAnalysis": true,
+        "testSuggestions": false,
+        "endToEndFlows": true,
+        "consolidatedDoc": true
+      },
+      "percentage": 50,
+      "passed": 3,
+      "total": 6
+    },
+    {
+      "object": "Survey__c",
+      "checks": {
+        "recordTypes": false,
+        "enrichedData": false,
+        "fieldsAnalysis": true,
+        "testSuggestions": false,
+        "endToEndFlows": true,
+        "consolidatedDoc": true
+      },
+      "percentage": 50,
+      "passed": 3,
+      "total": 6
+    },
+    {
+      "object": "TabelaDeImposto__c",
+      "checks": {
+        "recordTypes": false,
+        "enrichedData": false,
+        "fieldsAnalysis": true,
+        "testSuggestions": false,
+        "endToEndFlows": true,
+        "consolidatedDoc": true
+      },
+      "percentage": 50,
+      "passed": 3,
+      "total": 6
+    }
+  ],
+  "milestones": [
+    {
+      "name": "Brain Inicial",
+      "description": "Estrutura inicial do Brain criada com sistema de documentação e contexto",
+      "date": "2025-01-01",
+      "type": "infrastructure"
+    },
+    {
+      "name": "Sistema de Enriquecimento",
+      "description": "Sistema de enriquecimento de Record Types implementado para melhorar cobertura de dados",
+      "date": "2026-01-14",
+      "type": "feature"
+    },
+    {
+      "name": "Integração Jira Avançada",
+      "description": "Sistema avançado de integração com Jira incluindo criação de bugs, planos de teste e rastreabilidade completa",
+      "date": "2025-10-20",
+      "type": "feature"
+    },
+    {
+      "name": "Sistema MQL N8N Automation",
+      "description": "Sistema de roteamento automático MQL com N8N implementado e funcional",
+      "date": "2025-10-25",
+      "type": "feature"
+    },
+    {
+      "name": "Sistema de Detecção de Bugs N8N",
+      "description": "Sistema de validação e detecção automática de bugs no N8N com relatórios detalhados",
+      "date": "2025-10-25",
+      "type": "feature"
+    },
+    {
+      "name": "Memory Bank",
+      "description": "Sistema de preservação de contexto entre sessões de AI Coders implementado",
+      "date": "2025-09-15",
+      "type": "infrastructure"
+    },
+    {
+      "name": "Dashboard com Abas",
+      "description": "Dashboard reestruturado com sistema de abas e visualizações aprimoradas",
+      "date": "2026-01-27",
+      "type": "feature"
+    }
+  ]
+}
