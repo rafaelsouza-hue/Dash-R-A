@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Teste de Carregamento de Dados</title>
+</head>
+<body>
+    <h1>Teste de Carregamento de Dados</h1>
+    <div id="results"></div>
+    
+    <script>
+        async function testLoad() {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '<p>Testando carregamento...</p>';
+            
+            try {
+                const response = await fetch('history.json?t=' + Date.now(), {
+                    method: 'GET',
+                    cache: 'no-store'
+                });
+                
+                resultsDiv.innerHTML += `<p>Status: ${response.status} ${response.statusText}</p>`;
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    resultsDiv.innerHTML += `
+                        <h2>✅ Dados carregados com sucesso!</h2>
+                        <p>Versão: ${data.version}</p>
+                        <p>Execuções: ${data.executions?.length || 0}</p>
+                        <p>Summary: ${JSON.stringify(data.summary, null, 2)}</p>
+                        <h3>Primeira execução:</h3>
+                        <pre>${JSON.stringify(data.executions?.[0], null, 2)}</pre>
+                    `;
+                } else {
+                    resultsDiv.innerHTML += `<p>❌ Erro ao carregar: ${response.status}</p>`;
+                }
+            } catch (error) {
+                resultsDiv.innerHTML += `<p>❌ Erro: ${error.message}</p>`;
+                console.error('Erro completo:', error);
+            }
+        }
+        
+        testLoad();
+    </script>
+</body>
+</html>
