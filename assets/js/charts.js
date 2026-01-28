@@ -3024,7 +3024,8 @@ class ChartsManager {
         }
         
         // Se não houver CSV, usar dados de evolução estruturados
-        if (!evolutionData || !evolutionData.evolution) {
+        // evolution já foi declarado na linha 2859, então apenas verificamos se existe
+        if (!evolution || Object.keys(evolution).length === 0) {
             console.warn('⚠️ Sem dados de evolução estruturados para gráfico de tendência de criação');
             this.showNoDataMessage('chart-overview-creation-trend', 
                 'Sem dados disponíveis', 
@@ -3032,8 +3033,13 @@ class ChartsManager {
             return;
         }
 
-        const evolution = evolutionData.evolution || {};
-        const sortedDates = Object.keys(evolution).sort();
+        // Usar evolution já declarado (linha 2859)
+        // sortedDates já foi declarado na linha 2863, então apenas atualizamos se necessário
+        if (sortedDates.length === 0) {
+            // Se sortedDates está vazio, recalcular a partir de evolution
+            sortedDates.length = 0;
+            sortedDates.push(...Object.keys(evolution).sort());
+        }
         
         if (sortedDates.length === 0) {
             console.warn('⚠️ Sem datas disponíveis no objeto evolution');

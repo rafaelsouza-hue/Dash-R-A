@@ -738,8 +738,10 @@ class Dashboard {
         this.renderMetrics(normalizedExecutions);
         
         // Renderizar gráficos da visão geral
-        if (this.historyData) {
+        if (this.historyData && window.chartsManager) {
             await window.chartsManager.updateOverviewCharts(normalizedExecutions, this.evolutionData);
+        } else if (!window.chartsManager) {
+            console.warn('⚠️ chartsManager não está disponível. Verifique se charts.js foi carregado corretamente.');
         }
     }
 
