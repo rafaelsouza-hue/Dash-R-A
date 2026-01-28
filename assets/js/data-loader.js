@@ -2,6 +2,17 @@
  * Carregador de dados para o dashboard
  */
 
+/**
+ * Retorna o base path para GitHub Pages (ex: /Dash-R-A). No local ou raiz retorna ''.
+ * Garante que data/history.json seja pedido como /Dash-R-A/data/history.json no site.
+ */
+function getDataBasePath() {
+    if (typeof window === 'undefined' || !window.location || !window.location.pathname) return '';
+    const path = window.location.pathname;
+    if (path === '/' || path === '') return '';
+    return path.replace(/\/index\.html$/i, '').replace(/\/$/, '');
+}
+
 class DataLoader {
     constructor() {
         this.historyData = null;
@@ -10,36 +21,61 @@ class DataLoader {
 
     /**
      * Carrega dados do histórico de execuções
-     * Tenta carregar de dashboard/data/history.json primeiro, depois de ../public/history.json como fallback
+     * Usa base path explícito no GitHub Pages e bypass de cache para forçar renderização atual.
+     * @param {boolean} forceRefresh - Força atualização ignorando cache
      */
-    async loadHistory() {
-        const cacheBuster = `?t=${Date.now()}`;
+    async loadHistory(forceRefresh = false) {
+        if (forceRefresh) {
+            this.historyData = null;
+        }
         
-        // Tentar primeiro de history.json na raiz do public (dashboard público)
+        const cacheBuster = `?t=${Date.now()}${forceRefresh ? '&_refresh=' + Math.random() : ''}`;
+        const base = getDataBasePath();
+        const noStoreOpts = {
+            cache: 'no-store',
+            headers: {
+                'Cache-Control': 'no-cache, no-store, must-revalidate',
+                'Pragma': 'no-cache',
+                'Expires': '0'
+            }
+        };
+
+        // 1) data/history.json com path explícito (GitHub Pages: /Dash-R-A/data/history.json)
+        const dataHistoryUrl = base ? `${base}/data/history.json` : 'data/history.json';
         try {
-            const response = await fetch(`history.json${cacheBuster}`);
+            const response = await fetch(`${dataHistoryUrl}${cacheBuster}`, noStoreOpts);
             if (response.ok) {
                 this.historyData = await response.json();
                 return this.historyData;
             }
         } catch (error) {
-            console.warn('Não foi possível carregar de history.json, tentando fallback...', error);
+            console.warn('Não foi possível carregar de data/history.json, tentando fallback...', error);
         }
-        
-        // Fallback: tentar de data/history.json (compatibilidade)
+
+        // 2) history.json na raiz (deploy também grava em public/history.json)
+        const rootHistoryUrl = base ? `${base}/history.json` : 'history.json';
         try {
-            const response = await fetch(`data/history.json${cacheBuster}`);
+            const response = await fetch(`${rootHistoryUrl}${cacheBuster}`, noStoreOpts);
             if (response.ok) {
                 this.historyData = await response.json();
-                console.log('✅ Carregado de data/history.json (fallback)');
                 return this.historyData;
             }
         } catch (error) {
-            console.warn('Não foi possível carregar de data/history.json', error);
+            console.warn('Não foi possível carregar de history.json (raiz)', error);
         }
         
-        // Se ambos falharem, retornar estrutura vazia
-        console.error('Erro ao carregar histórico de ambos os locais');
+        // 3) Fallback local: ../public/history.json
+        try {
+            const response = await fetch(`../public/history.json${cacheBuster}`, noStoreOpts);
+            if (response.ok) {
+                this.historyData = await response.json();
+                return this.historyData;
+            }
+        } catch (error) {
+            console.warn('Não foi possível carregar de ../public/history.json', error);
+        }
+        
+        console.error('Erro ao carregar histórico de todos os locais');
         return {
             executions: [],
             metadata: {
@@ -58,27 +94,27 @@ class DataLoader {
     async loadEvolution() {
         const cacheBuster = `?t=${Date.now()}`;
         
-        // Tentar primeiro de test-evolution.json na raiz do public (dashboard público)
-        try {
-            const response = await fetch(`test-evolution.json${cacheBuster}`);
-            if (response.ok) {
-                this.evolutionData = await response.json();
-                return this.evolutionData;
-            }
-        } catch (error) {
-            console.warn('Não foi possível carregar de test-evolution.json, tentando fallback...', error);
-        }
-        
-        // Fallback: tentar de data/test-evolution.json (compatibilidade)
+        // Tentar primeiro de dashboard/data/test-evolution.json (local)
         try {
             const response = await fetch(`data/test-evolution.json${cacheBuster}`);
             if (response.ok) {
                 this.evolutionData = await response.json();
-                console.log('✅ Carregado de data/test-evolution.json (fallback)');
                 return this.evolutionData;
             }
         } catch (error) {
-            console.warn('Não foi possível carregar de data/test-evolution.json', error);
+            console.warn('Não foi possível carregar de data/test-evolution.json, tentando fallback...', error);
+        }
+        
+        // Fallback: tentar de ../public/test-evolution.json (compatibilidade com GitHub Pages)
+        try {
+            const response = await fetch(`../public/test-evolution.json${cacheBuster}`);
+            if (response.ok) {
+                this.evolutionData = await response.json();
+                console.log('✅ Carregado de ../public/test-evolution.json (fallback)');
+                return this.evolutionData;
+            }
+        } catch (error) {
+            console.warn('Não foi possível carregar de ../public/test-evolution.json', error);
         }
         
         // Se ambos falharem, retornar estrutura vazia
@@ -94,6 +130,286 @@ class DataLoader {
                 totalFiles: 0
             }
         };
+    }
+
+    /**
+     * Carrega dados do CSV de regressões para análise de tendência de criação
+     */
+    async loadCSVRegressionData() {
+        // Tentar múltiplos caminhos possíveis
+        // Quando servido de dashboard/, o CSV precisa estar dentro de dashboard/ ou em data/
+        // Adicionar timestamp para evitar cache
+        const timestamp = new Date().getTime();
+        const csvPaths = [
+            `data/regressoes.csv?v=${timestamp}`,
+            `data/Regressões - Regressão (1).csv?v=${timestamp}`,
+            `../Planilhas/Regressões - Regressão (1).csv?v=${timestamp}`,
+            `../../Planilhas/Regressões - Regressão (1).csv?v=${timestamp}`,
+            `Planilhas/Regressões - Regressão (1).csv?v=${timestamp}`
+        ];
+        
+        for (const path of csvPaths) {
+            try {
+                console.log(`Tentando carregar CSV de: ${path}`);
+                const response = await fetch(path, {
+                    cache: 'no-store' // Forçar não usar cache
+                });
+                if (response.ok) {
+                    const csvText = await response.text();
+                    if (!csvText || csvText.trim() === '') {
+                        console.warn(`CSV vazio para ${path}`);
+                        continue;
+                    }
+                    console.log(`CSV carregado, tamanho: ${csvText.length} caracteres`);
+                    const parsed = this.parseCSV(csvText);
+                    if (parsed && parsed.byMonth && Object.keys(parsed.byMonth).length > 0) {
+                        console.log(`✅ CSV parseado com sucesso de: ${path}`);
+                        return parsed;
+                    } else {
+                        console.warn(`CSV carregado mas não foi possível parsear ou não tem dados: ${path}`, parsed);
+                    }
+                } else {
+                    console.warn(`Resposta não OK para ${path}: ${response.status} ${response.statusText}`);
+                }
+            } catch (error) {
+                console.warn(`Erro ao carregar ${path}:`, error.message);
+                // Tentar próximo caminho
+                continue;
+            }
+        }
+        
+        console.warn('Não foi possível carregar CSV de regressões de nenhum caminho');
+        return null;
+    }
+
+    /**
+     * Parse simples de CSV (suporta campos com quebras de linha entre aspas)
+     */
+    parseCSV(csvText) {
+        try {
+            if (!csvText || csvText.trim() === '') {
+                console.warn('CSV vazio ou inválido');
+                return null;
+            }
+            
+            const rows = [];
+            let currentRow = [];
+            let currentField = '';
+            let insideQuotes = false;
+            
+            for (let i = 0; i < csvText.length; i++) {
+                const char = csvText[i];
+                const nextChar = csvText[i + 1];
+                
+                if (char === '"') {
+                    if (insideQuotes && nextChar === '"') {
+                        // Escaped quote
+                        currentField += '"';
+                        i++; // Skip next quote
+                    } else {
+                        // Toggle quote state
+                        insideQuotes = !insideQuotes;
+                    }
+                } else if (char === ',' && !insideQuotes) {
+                    // End of field
+                    currentRow.push(currentField.trim());
+                    currentField = '';
+                } else if ((char === '\n' || char === '\r') && !insideQuotes) {
+                    // End of row (but handle \r\n)
+                    if (char === '\n' || (char === '\r' && nextChar !== '\n')) {
+                        if (currentField || currentRow.length > 0) {
+                            currentRow.push(currentField.trim());
+                            rows.push(currentRow);
+                            currentRow = [];
+                            currentField = '';
+                        }
+                    }
+                } else {
+                    currentField += char;
+                }
+            }
+            
+            // Add last field/row if exists
+            if (currentField || currentRow.length > 0) {
+                currentRow.push(currentField.trim());
+                if (currentRow.length > 0) {
+                    rows.push(currentRow);
+                }
+            }
+            
+            if (rows.length === 0) return null;
+            
+            // Primeira linha são os headers
+            const headers = rows[0];
+            console.log('Headers do CSV:', headers);
+            console.log('Total de colunas:', headers.length);
+            console.log('Última coluna (índice ' + (headers.length - 1) + '):', headers[headers.length - 1]);
+            console.log('Coluna AA (índice 26):', headers[26] || 'NÃO ENCONTRADA');
+            
+            // Coluna L é o índice 11 (A=0, B=1, ..., L=11)
+            // Tentar pelo nome primeiro, depois usar índice direto
+            let dataIndex = headers.indexOf('Data de criação');
+            if (dataIndex === -1) {
+                // Se não encontrou pelo nome, usar índice 11 diretamente (coluna L)
+                if (headers.length > 11) {
+                    dataIndex = 11;
+                    console.log('Usando índice 11 (coluna L) diretamente para data de criação');
+                } else {
+                    console.warn('CSV não tem coluna suficiente. Esperado pelo menos 12 colunas (L), encontrado:', headers.length);
+                    return null;
+                }
+            }
+            
+            const automatedIndex = headers.indexOf('Automatizado?');
+            const automationDateIndex = headers.indexOf('Data da automatização');
+            const idIndex = headers.indexOf('ID');
+            
+            console.log('Índices encontrados:', { 
+                dataIndex, 
+                automatedIndex, 
+                automationDateIndex,
+                idIndex, 
+                totalHeaders: headers.length,
+                headerNaColunaL: headers[11] || 'não encontrado',
+                headerNaColunaAA: headers[26] || 'não encontrado'
+            });
+            
+            if (dataIndex < 0 || dataIndex >= headers.length) {
+                console.warn('Índice de data inválido. Headers disponíveis:', headers);
+                return null;
+            }
+            
+            // Processar dados
+            const tests = [];
+            const byMonth = {}; // Agrupamento por Data de criação (para Total de Testes)
+            const byAutomationMonth = {}; // Agrupamento por Data da automatização (para Testes Automatizados)
+            let processedCount = 0;
+            let skippedCount = 0;
+            
+            // Função auxiliar para parsear data e retornar monthKey
+            function parseDateToMonthKey(dateString) {
+                if (!dateString || dateString.trim() === '') return null;
+                
+                // Tentar formato DD/MM/YYYY
+                const dateMatch = dateString.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+                if (dateMatch) {
+                    const [, day, month, year] = dateMatch;
+                    return `${year}-${month.padStart(2, '0')}`;
+                }
+                
+                // Tentar outros formatos (DD-MM-YYYY)
+                const dateMatch2 = dateString.match(/(\d{1,2})-(\d{1,2})-(\d{4})/);
+                if (dateMatch2) {
+                    const [, day, month, year] = dateMatch2;
+                    return `${year}-${month.padStart(2, '0')}`;
+                }
+                
+                // Tentar Date.parse
+                const dateObj = new Date(dateString);
+                if (!isNaN(dateObj.getTime())) {
+                    const year = dateObj.getFullYear();
+                    const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+                    return `${year}-${month}`;
+                }
+                
+                return null;
+            }
+            
+            for (let i = 1; i < rows.length; i++) {
+                const row = rows[i];
+                
+                // Debug: log primeira linha para ver estrutura
+                if (i === 1) {
+                    console.log('Primeira linha de dados:', row);
+                    console.log('Tamanho da linha:', row.length);
+                    console.log('Data na coluna L (índice 11):', row[11]);
+                    console.log('Data da automatização na coluna AA (índice 26):', row[26]);
+                }
+                
+                if (row.length <= dataIndex) {
+                    skippedCount++;
+                    if (i <= 3) console.log(`Linha ${i} pulada: tamanho insuficiente (${row.length} < ${dataIndex + 1})`);
+                    continue;
+                }
+                
+                const creationDate = row[dataIndex];
+                const automated = automatedIndex !== -1 && automatedIndex < row.length ? row[automatedIndex] : '';
+                const automationDate = automationDateIndex !== -1 && automationDateIndex < row.length ? row[automationDateIndex] : null;
+                const id = idIndex !== -1 && idIndex < row.length ? row[idIndex] : `Teste ${i}`;
+                
+                if (!creationDate || creationDate.trim() === '') {
+                    skippedCount++;
+                    if (i <= 3) console.log(`Linha ${i} pulada: data vazia (${creationDate})`);
+                    continue;
+                }
+                
+                processedCount++;
+                
+                // Parsear Data de criação (para Total de Testes)
+                const monthKey = parseDateToMonthKey(creationDate);
+                if (!monthKey) {
+                    if (i <= 3) console.log(`Linha ${i} pulada: não foi possível parsear data de criação (${creationDate})`);
+                    continue;
+                }
+                
+                // Parsear Data da automatização (para Testes Automatizados)
+                let automationMonthKey = null;
+                if (automationDate && automationDate.trim() !== '') {
+                    automationMonthKey = parseDateToMonthKey(automationDate);
+                }
+                
+                const isAutomated = automated && (
+                    automated.toLowerCase() === 'automatizado' ||
+                    automated.toLowerCase() === 'sim' || 
+                    automated.toLowerCase() === 'true' || 
+                    automated === '1' ||
+                    automated.toLowerCase() === 'yes'
+                );
+                
+                const test = {
+                    id: id,
+                    createdDate: creationDate,
+                    automationDate: automationDate, // Data da automatização (coluna AA)
+                    automated: isAutomated,
+                    monthKey: monthKey,
+                    automationMonthKey: automationMonthKey // Mês da automatização (baseado na coluna AA)
+                };
+                
+                tests.push(test);
+                
+                // Agrupar por Data de criação (para Total de Testes)
+                if (!byMonth[monthKey]) {
+                    byMonth[monthKey] = [];
+                }
+                byMonth[monthKey].push(test);
+                
+                // Agrupar por Data da automatização (para Testes Automatizados)
+                // Só agrupa se o teste está automatizado E tem data de automatização
+                if (isAutomated && automationMonthKey) {
+                    if (!byAutomationMonth[automationMonthKey]) {
+                        byAutomationMonth[automationMonthKey] = [];
+                    }
+                    byAutomationMonth[automationMonthKey].push(test);
+                }
+            }
+            
+            console.log(`CSV processado: ${processedCount} testes processados, ${skippedCount} ignorados`);
+            console.log('Meses encontrados (criação):', Object.keys(byMonth).sort());
+            console.log('Meses encontrados (automatização):', Object.keys(byAutomationMonth).sort());
+            console.log('Total de testes por mês (criação):', Object.keys(byMonth).map(m => ({ month: m, count: byMonth[m].length })));
+            console.log('Total de testes por mês (automatização):', Object.keys(byAutomationMonth).map(m => ({ month: m, count: byAutomationMonth[m].length })));
+            
+            return {
+                tests: tests,
+                byMonth: byMonth, // Agrupamento por Data de criação
+                byAutomationMonth: byAutomationMonth, // Agrupamento por Data da automatização
+                totalTests: tests.length,
+                automatedTests: tests.filter(t => t.automated).length
+            };
+        } catch (error) {
+            console.error('Erro ao parsear CSV:', error);
+            return null;
+        }
     }
 
     /**
@@ -200,16 +516,70 @@ class DataLoader {
         }
 
         const totalExecutions = executions.length;
-        const totalRegressions = executions.filter(e => e.executionType === 'full').length;
-        const totalLocal = executions.filter(e => e.executionType === 'local').length;
         
-        const totalSuccessRate = executions.reduce((sum, e) => sum + (e.successRate || 0), 0);
+        // Determinar tipo de execução (full = regressão completa, local = execução local)
+        // Confiar no executionType já normalizado, mas fazer fallback se necessário
+        const totalRegressions = executions.filter(e => {
+            // Se já tem executionType normalizado, usar ele
+            if (e.executionType) {
+                return e.executionType === 'full';
+            }
+            // Fallback: inferir do executionId
+            return e.executionId && e.executionId.includes('regression');
+        }).length;
+        
+        const totalLocal = executions.filter(e => {
+            // Se já tem executionType normalizado, usar ele
+            if (e.executionType) {
+                return e.executionType === 'local';
+            }
+            // Fallback: inferir do executionId (se não contém 'regression', é local)
+            return !e.executionId || !e.executionId.includes('regression');
+        }).length;
+        
+        // Acessar successRate corretamente (pode estar em metrics.successRate ou diretamente)
+        const totalSuccessRate = executions.reduce((sum, e) => {
+            const rate = e.metrics?.successRate ?? e.successRate ?? (e.total > 0 ? ((e.passed || 0) / e.total) * 100 : 0);
+            return sum + rate;
+        }, 0);
         const avgSuccessRate = totalSuccessRate / totalExecutions;
         
-        const totalAdjustedRate = executions.reduce((sum, e) => sum + (e.adjustedSuccessRate || 0), 0);
+        // Adjusted rate (taxa ajustada removendo bugs reais) - usar successRate se não tiver adjusted
+        const totalAdjustedRate = executions.reduce((sum, e) => {
+            const adjustedRate = e.adjustedSuccessRate ?? e.metrics?.adjustedSuccessRate;
+            if (adjustedRate !== undefined) {
+                return sum + adjustedRate;
+            }
+            // Se não tiver adjusted, calcular removendo bugs reais
+            const bugs = e.errorClassification?.salesforceBug || 0;
+            const total = e.total || 0;
+            if (total > 0 && bugs > 0) {
+                const adjusted = ((e.passed || 0) / (total - bugs)) * 100;
+                return sum + adjusted;
+            }
+            // Se não tiver bugs, usar successRate normal
+            const rate = e.metrics?.successRate ?? e.successRate ?? (total > 0 ? ((e.passed || 0) / total) * 100 : 0);
+            return sum + rate;
+        }, 0);
         const avgAdjustedRate = totalAdjustedRate / totalExecutions;
         
-        const totalTimeGained = executions.reduce((sum, e) => sum + (e.timeGained || 0), 0);
+        // Calcular tempo ganho (durationManual - duration)
+        const totalTimeGained = executions.reduce((sum, e) => {
+            const timeGained = e.timeGained;
+            if (timeGained !== undefined) {
+                return sum + timeGained;
+            }
+            // Calcular se tiver durationManual e duration
+            if (e.durationManual && e.duration) {
+                return sum + (e.durationManual - e.duration);
+            }
+            // Se não tiver durationManual, estimar: 10 minutos por teste
+            if (e.total && e.duration) {
+                const estimatedManual = e.total * 10 * 60 * 1000; // 10 min por teste em ms
+                return sum + (estimatedManual - e.duration);
+            }
+            return sum;
+        }, 0);
 
         return {
             totalExecutions,
@@ -238,252 +608,6 @@ class DataLoader {
         // Formato hh:mm (ex: 00:01, 00:27, 02:30, 7646:53)
         // Horas podem ter qualquer quantidade de dígitos, minutos sempre 2 dígitos
         return `${hours}:${String(finalMinutes).padStart(2, '0')}`;
-    }
-
-    /**
-     * Carrega dados do CSV de regressões para análise de tendência de criação
-     */
-    async loadCSVRegressionData() {
-        // Tentar múltiplos caminhos possíveis
-        // Para GitHub Pages, o CSV precisa estar em data/
-        const timestamp = new Date().getTime();
-        const csvPaths = [
-            `data/regressoes.csv?v=${timestamp}`,
-            `data/Regressões - Regressão (1).csv?v=${timestamp}`
-        ];
-        
-        for (const path of csvPaths) {
-            try {
-                console.log(`Tentando carregar CSV de: ${path}`);
-                const response = await fetch(path, {
-                    cache: 'no-store' // Forçar não usar cache
-                });
-                if (response.ok) {
-                    const csvText = await response.text();
-                    if (!csvText || csvText.trim() === '') {
-                        console.warn(`CSV vazio para ${path}`);
-                        continue;
-                    }
-                    console.log(`CSV carregado, tamanho: ${csvText.length} caracteres`);
-                    const parsed = this.parseCSV(csvText);
-                    if (parsed && parsed.byMonth && Object.keys(parsed.byMonth).length > 0) {
-                        console.log(`✅ CSV parseado com sucesso de: ${path}`);
-                        return parsed;
-                    } else {
-                        console.warn(`CSV carregado mas não foi possível parsear ou não tem dados: ${path}`, parsed);
-                    }
-                } else {
-                    console.warn(`Resposta não OK para ${path}: ${response.status} ${response.statusText}`);
-                }
-            } catch (error) {
-                console.warn(`Erro ao carregar ${path}:`, error.message);
-                // Tentar próximo caminho
-                continue;
-            }
-        }
-        
-        console.warn('Não foi possível carregar CSV de regressões de nenhum caminho');
-        return null;
-    }
-
-    /**
-     * Parse simples de CSV (suporta campos com quebras de linha entre aspas)
-     */
-    parseCSV(csvText) {
-        try {
-            if (!csvText || csvText.trim() === '') {
-                console.warn('CSV vazio ou inválido');
-                return null;
-            }
-            
-            const rows = [];
-            let currentRow = [];
-            let currentField = '';
-            let insideQuotes = false;
-            
-            for (let i = 0; i < csvText.length; i++) {
-                const char = csvText[i];
-                const nextChar = csvText[i + 1];
-                
-                if (char === '"') {
-                    if (insideQuotes && nextChar === '"') {
-                        // Escaped quote
-                        currentField += '"';
-                        i++; // Skip next quote
-                    } else {
-                        // Toggle quote state
-                        insideQuotes = !insideQuotes;
-                    }
-                } else if (char === ',' && !insideQuotes) {
-                    // End of field
-                    currentRow.push(currentField.trim());
-                    currentField = '';
-                } else if ((char === '\n' || char === '\r') && !insideQuotes) {
-                    // End of row (but handle \r\n)
-                    if (char === '\n' || (char === '\r' && nextChar !== '\n')) {
-                        if (currentField || currentRow.length > 0) {
-                            currentRow.push(currentField.trim());
-                            rows.push(currentRow);
-                            currentRow = [];
-                            currentField = '';
-                        }
-                    }
-                } else {
-                    currentField += char;
-                }
-            }
-            
-            // Add last field/row if exists
-            if (currentField || currentRow.length > 0) {
-                currentRow.push(currentField.trim());
-                if (currentRow.length > 0) {
-                    rows.push(currentRow);
-                }
-            }
-            
-            if (rows.length === 0) return null;
-            
-            // Primeira linha são os headers
-            const headers = rows[0];
-            console.log('Headers do CSV:', headers);
-            
-            // Coluna L é o índice 11 (A=0, B=1, ..., L=11)
-            let dataIndex = headers.indexOf('Data de criação');
-            if (dataIndex === -1) {
-                // Se não encontrou pelo nome, usar índice 11 diretamente (coluna L)
-                if (headers.length > 11) {
-                    dataIndex = 11;
-                    console.log('Usando índice 11 (coluna L) diretamente para data de criação');
-                } else {
-                    console.warn('CSV não tem coluna suficiente. Esperado pelo menos 12 colunas (L), encontrado:', headers.length);
-                    return null;
-                }
-            }
-            
-            const automatedIndex = headers.indexOf('Automatizado?');
-            const automationDateIndex = headers.indexOf('Data da automatização');
-            const idIndex = headers.indexOf('ID');
-            
-            if (dataIndex < 0 || dataIndex >= headers.length) {
-                console.warn('Índice de data inválido. Headers disponíveis:', headers);
-                return null;
-            }
-            
-            // Processar dados
-            const tests = [];
-            const byMonth = {}; // Agrupamento por Data de criação (para Total de Testes)
-            const byAutomationMonth = {}; // Agrupamento por Data da automatização (para Testes Automatizados)
-            let processedCount = 0;
-            let skippedCount = 0;
-            
-            // Função auxiliar para parsear data e retornar monthKey
-            function parseDateToMonthKey(dateString) {
-                if (!dateString || dateString.trim() === '') return null;
-                
-                // Tentar formato DD/MM/YYYY
-                const dateMatch = dateString.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
-                if (dateMatch) {
-                    const [, day, month, year] = dateMatch;
-                    return `${year}-${month.padStart(2, '0')}`;
-                }
-                
-                // Tentar outros formatos (DD-MM-YYYY)
-                const dateMatch2 = dateString.match(/(\d{1,2})-(\d{1,2})-(\d{4})/);
-                if (dateMatch2) {
-                    const [, day, month, year] = dateMatch2;
-                    return `${year}-${month.padStart(2, '0')}`;
-                }
-                
-                // Tentar Date.parse
-                const dateObj = new Date(dateString);
-                if (!isNaN(dateObj.getTime())) {
-                    const year = dateObj.getFullYear();
-                    const month = String(dateObj.getMonth() + 1).padStart(2, '0');
-                    return `${year}-${month}`;
-                }
-                
-                return null;
-            }
-            
-            for (let i = 1; i < rows.length; i++) {
-                const row = rows[i];
-                
-                if (row.length <= dataIndex) {
-                    skippedCount++;
-                    continue;
-                }
-                
-                const creationDate = row[dataIndex];
-                const automated = automatedIndex !== -1 && automatedIndex < row.length ? row[automatedIndex] : '';
-                const automationDate = automationDateIndex !== -1 && automationDateIndex < row.length ? row[automationDateIndex] : null;
-                const id = idIndex !== -1 && idIndex < row.length ? row[idIndex] : `Teste ${i}`;
-                
-                if (!creationDate || creationDate.trim() === '') {
-                    skippedCount++;
-                    continue;
-                }
-                
-                processedCount++;
-                
-                // Parsear Data de criação (para Total de Testes)
-                const monthKey = parseDateToMonthKey(creationDate);
-                if (!monthKey) {
-                    continue;
-                }
-                
-                // Parsear Data da automatização (para Testes Automatizados)
-                let automationMonthKey = null;
-                if (automationDate && automationDate.trim() !== '') {
-                    automationMonthKey = parseDateToMonthKey(automationDate);
-                }
-                
-                const isAutomated = automated && (
-                    automated.toLowerCase() === 'automatizado' ||
-                    automated.toLowerCase() === 'sim' || 
-                    automated.toLowerCase() === 'true' || 
-                    automated === '1' ||
-                    automated.toLowerCase() === 'yes'
-                );
-                
-                const test = {
-                    id: id,
-                    createdDate: creationDate,
-                    automationDate: automationDate,
-                    automated: isAutomated,
-                    monthKey: monthKey,
-                    automationMonthKey: automationMonthKey
-                };
-                
-                tests.push(test);
-                
-                // Agrupar por Data de criação (para Total de Testes)
-                if (!byMonth[monthKey]) {
-                    byMonth[monthKey] = [];
-                }
-                byMonth[monthKey].push(test);
-                
-                // Agrupar por Data da automatização (para Testes Automatizados)
-                if (isAutomated && automationMonthKey) {
-                    if (!byAutomationMonth[automationMonthKey]) {
-                        byAutomationMonth[automationMonthKey] = [];
-                    }
-                    byAutomationMonth[automationMonthKey].push(test);
-                }
-            }
-            
-            console.log(`CSV processado: ${processedCount} testes processados, ${skippedCount} ignorados`);
-            
-            return {
-                tests: tests,
-                byMonth: byMonth,
-                byAutomationMonth: byAutomationMonth,
-                totalTests: tests.length,
-                automatedTests: tests.filter(t => t.automated).length
-            };
-        } catch (error) {
-            console.error('Erro ao parsear CSV:', error);
-            return null;
-        }
     }
 
     /**
