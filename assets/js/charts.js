@@ -3023,7 +3023,26 @@ class ChartsManager {
             return;
         }
         
-        // Se houver dados de evolução estruturados
+        // Se não houver CSV, usar dados de evolução estruturados
+        if (!evolutionData || !evolutionData.evolution) {
+            console.warn('⚠️ Sem dados de evolução estruturados para gráfico de tendência de criação');
+            this.showNoDataMessage('chart-overview-creation-trend', 
+                'Sem dados disponíveis', 
+                'Não há dados de evolução de testes disponíveis para exibir este gráfico');
+            return;
+        }
+
+        const evolution = evolutionData.evolution || {};
+        const sortedDates = Object.keys(evolution).sort();
+        
+        if (sortedDates.length === 0) {
+            console.warn('⚠️ Sem datas disponíveis no objeto evolution');
+            this.showNoDataMessage('chart-overview-creation-trend', 
+                'Sem dados disponíveis', 
+                'Não há dados de evolução de testes por mês disponíveis');
+            return;
+        }
+
         const labels = sortedDates.map(d => {
             const [year, month] = d.split('-');
             const monthNames = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
@@ -3035,14 +3054,18 @@ class ChartsManager {
         let automatedAccumulated = 0;
         
         const totalData = sortedDates.map(date => {
-            const monthTests = evolution[date] || [];
-            totalAccumulated += monthTests.length;
+            const monthTests = evolution[date];
+            // Garantir que monthTests é um array
+            const testsArray = Array.isArray(monthTests) ? monthTests : [];
+            totalAccumulated += testsArray.length;
             return totalAccumulated;
         });
         
         const automatedData = sortedDates.map(date => {
-            const monthTests = evolution[date] || [];
-            const automated = monthTests.filter(t => t.automated).length;
+            const monthTests = evolution[date];
+            // Garantir que monthTests é um array
+            const testsArray = Array.isArray(monthTests) ? monthTests : [];
+            const automated = testsArray.filter(t => t && t.automated).length;
             automatedAccumulated += automated;
             return automatedAccumulated;
         });
