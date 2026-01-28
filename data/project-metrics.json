@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-01-27T22:31:14.277Z",
+  "generatedAt": "2026-01-28T14:51:57.070Z",
   "summary": {
     "totalObjects": 23,
     "averageCompleteness": 57,
     "businessRulesCount": 11,
-    "milestonesCount": 7,
+    "milestonesCount": 11,
     "evolutionEvents": 15
   },
   "temporalEvolution": {
@@ -936,10 +936,10 @@
       "type": "infrastructure"
     },
     {
-      "name": "Sistema de Enriquecimento",
-      "description": "Sistema de enriquecimento de Record Types implementado para melhorar cobertura de dados",
-      "date": "2026-01-14",
-      "type": "feature"
+      "name": "Memory Bank",
+      "description": "Sistema de preservação de contexto entre sessões de AI Coders implementado",
+      "date": "2025-09-15",
+      "type": "infrastructure"
     },
     {
       "name": "Integração Jira Avançada",
@@ -957,19 +957,43 @@
       "name": "Sistema de Detecção de Bugs N8N",
       "description": "Sistema de validação e detecção automática de bugs no N8N com relatórios detalhados",
       "date": "2025-10-25",
+      "type": "improvement"
+    },
+    {
+      "name": "Sincronização Salesforce Metadata",
+      "description": "Sistema de sincronização de metadata do Salesforce (schemas, flows, profiles) via Salesforce DX CLI",
+      "date": "2025-11-01",
       "type": "feature"
     },
     {
-      "name": "Memory Bank",
-      "description": "Sistema de preservação de contexto entre sessões de AI Coders implementado",
-      "date": "2025-09-15",
-      "type": "infrastructure"
+      "name": "Sistema de Enriquecimento",
+      "description": "Sistema de enriquecimento de Record Types implementado para melhorar cobertura de dados",
+      "date": "2026-01-14",
+      "type": "feature"
+    },
+    {
+      "name": "Documentação Completa de Regras de Negócio",
+      "description": "Documentação estruturada de regras de negócio para objetos principais (Account, Lead, Opportunity, Contract, etc.)",
+      "date": "2025-12-01",
+      "type": "documentation"
+    },
+    {
+      "name": "Documentação de Análises e Configurações",
+      "description": "Biblioteca completa de análises, configurações e guias técnicos na pasta Docs/",
+      "date": "2025-11-15",
+      "type": "documentation"
     },
     {
       "name": "Dashboard com Abas",
       "description": "Dashboard reestruturado com sistema de abas e visualizações aprimoradas",
-      "date": "2026-01-27",
-      "type": "feature"
+      "date": "2026-01-28",
+      "type": "improvement"
+    },
+    {
+      "name": "Sistema de Métricas e Relatórios",
+      "description": "Sistema automatizado de geração de métricas de projeto, cobertura e evolução temporal",
+      "date": "2026-01-20",
+      "type": "improvement"
     }
   ]
 }
